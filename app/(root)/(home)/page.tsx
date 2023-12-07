@@ -1,9 +1,13 @@
 import HomeFilters from "@/components/home/HomeFilters";
+import CustomBtn from "@/components/shared/CustomBtn";
+import NoResult from "@/components/shared/NoResult";
 import Filters from "@/components/shared/filters/Filters";
+import QuestionCard from "@/components/shared/cards/QuestionCard";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-import { Button } from "@/components/ui/button";
+
+import { dummyQuestionList } from "@/contants/data";
 import { HomePageFilters } from "@/contants/filters";
-import Link from "next/link";
+
 import React from "react";
 
 const Home = () => {
@@ -11,11 +15,12 @@ const Home = () => {
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
-          <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
-            Ask a Question
-          </Button>
-        </Link>
+        <CustomBtn
+          route="ask-question"
+          label="Ask a Question"
+          linkClasses="justify-end"
+          btnClasses="primary-gradient"
+        />
       </div>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
@@ -34,6 +39,25 @@ const Home = () => {
       </div>
 
       <HomeFilters />
+
+      <div className="mt-10 flex w-full flex-col gap-6">
+        {dummyQuestionList.length > 0 ? (
+          dummyQuestionList.map((question, index) => (
+            <QuestionCard key={index} question={question} />
+          ))
+        ) : (
+          <div className="flex-center text-dark400_light500 mt-10 w-full">
+            <NoResult
+              title="There&#39;s no question to show"
+              description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
+            discussion. our query could be the next big thing others learn from. Get
+            involved! 💡"
+              link="ask-question"
+              linkTitle="Ask a Question"
+            />
+          </div>
+        )}
+      </div>
     </>
   );
 };
