@@ -4,13 +4,15 @@ import NoResult from "@/components/shared/NoResult";
 import Filters from "@/components/shared/filters/Filters";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-
-import { dummyQuestionList } from "@/contants/data";
 import { HomePageFilters } from "@/contants/filters";
 
 import React from "react";
+import { getQuestions } from "@/lib/actions/question.action";
 
-const Home = () => {
+const Home = async () => {
+  const result = await getQuestions({});
+  const allQuestions = result.questions;
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -41,9 +43,19 @@ const Home = () => {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {dummyQuestionList.length > 0 ? (
-          dummyQuestionList.map((question, index) => (
-            <QuestionCard key={index} question={question} />
+        {allQuestions.length > 0 ? (
+          allQuestions.map((question, index) => (
+            <QuestionCard
+              key={index}
+              _id={question._id}
+              title={question.title}
+              tags={question.tags}
+              author={question.author}
+              upvotes={question.upvotes}
+              views={question.views}
+              answers={question.answers}
+              createdAt={question.createdAt}
+            />
           ))
         ) : (
           <div className="flex-center text-dark400_light500 mt-10 w-full">

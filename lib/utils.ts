@@ -7,7 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getTimeStamp = (createdAt: Date): string => {
   const now = new Date();
-  const timeDifference = now.getTime() - createdAt.getTime();
+  const createdAtTime = new Date(createdAt).getTime();
+  const timeDifference = now.getTime() - createdAtTime;
 
   // Define time intervals in milliseconds
   const min = 60 * 1000;
@@ -53,7 +54,7 @@ export const formatNumbers = (num: number): string => {
 };
 
 export const formatType = (num: number, type: string): string => {
-  if (num === 1) {
+  if (num <= 1) {
     return `${type}`;
   } else {
     return type + "s";

@@ -62,6 +62,7 @@ const QuestionForm = ({
         tags: values.tags,
         // @ts-ignore
         author: JSON.parse(mongoUserId),
+        path: pathname,
       });
 
       // navigate to home page
