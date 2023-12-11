@@ -4,7 +4,7 @@ import { Badge } from "../ui/badge";
 
 interface RenderTagProps {
   tag: string;
-  _id: number;
+  _id: number | string;
   amount?: number;
   showAmount?: boolean;
 }
