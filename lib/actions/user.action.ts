@@ -34,7 +34,7 @@ export async function createUser(userData: CreateUserParams) {
     // Create new User
     const newUser = await User.create(userData);
 
-    if (!newUser) throw Error;
+    if (!newUser) throw new Error('not found');
 
     return newUser;
   } catch (error) {
@@ -54,6 +54,10 @@ export async function updateUser(userUpdateData: UpdateUserParams) {
     const updatedUser = await User.findByIdAndUpdate({ clerkId }, updateData, {
       new: true,
     });
+    
+    if(!updatedUser) {
+      throw new Error('not found user to update')
+    }
 
     // Revalidate Path
     revalidatePath(path);
@@ -75,7 +79,7 @@ export async function deleteUser(userId: DeleteUserParams) {
     const user = await User.findOne({ clerkId });
 
     // Throw an error if not found
-    if (!user) throw new Error("User not found");
+    if (!user) throw new Error("User not found to delte");
 
     // Get user's question ids
     // const userQuestionIds = await Question.find({ author: user._id }).distinct(
