@@ -51,7 +51,7 @@ export async function updateUser(userUpdateData: UpdateUserParams) {
     const { clerkId, updateData, path } = userUpdateData;
 
     // Find and update user data based on ClerkId, return data after update
-    const updatedUser = await User.findByIdAndUpdate({ clerkId }, updateData, {
+    const updatedUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
     });
     
