@@ -72,8 +72,6 @@ const QuestionForm = ({
     } finally {
       setIsSubmitting(false);
     }
-
-    console.log(values);
   }
 
   function handleInputKeyDown(
