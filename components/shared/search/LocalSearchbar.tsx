@@ -9,7 +9,7 @@ interface SearchProps {
   iconPosition: string;
   imgSrc: string;
   placeholder: string;
-  otherClasses: string;
+  otherClasses?: string;
 }
 
 const LocalSearchbar = ({
@@ -19,6 +19,7 @@ const LocalSearchbar = ({
   placeholder,
   otherClasses,
 }: SearchProps) => {
+  console.log(route);
   return (
     <div
       className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-1 rounded-[10px] px-4 ${otherClasses}`}
