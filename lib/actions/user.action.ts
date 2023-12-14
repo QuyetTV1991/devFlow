@@ -5,6 +5,7 @@ import { connectToDataBase } from "../mongoose";
 import {
   CreateUserParams,
   DeleteUserParams,
+  GetAllUsersParams,
   GetUserByIdParams,
   UpdateUserParams,
 } from "./shared.types";
@@ -34,7 +35,7 @@ export async function createUser(userData: CreateUserParams) {
     // Create new User
     const newUser = await User.create(userData);
 
-    if (!newUser) throw new Error('not found');
+    if (!newUser) throw new Error("not found");
 
     return newUser;
   } catch (error) {
@@ -54,9 +55,9 @@ export async function updateUser(userUpdateData: UpdateUserParams) {
     const updatedUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
     });
-    
-    if(!updatedUser) {
-      throw new Error('not found user to update')
+
+    if (!updatedUser) {
+      throw new Error("not found user to update");
     }
 
     // Revalidate Path
@@ -95,6 +96,22 @@ export async function deleteUser(userId: DeleteUserParams) {
     const deletedUser = await User.findByIdAndDelete(user._id);
 
     return deletedUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getAllUses(params: GetAllUsersParams) {
+  try {
+    connectToDataBase();
+
+    // Find all users
+    const allUsers = await User.find({});
+
+    if (!allUsers) console.log("somethings went wrong");
+
+    return allUsers;
   } catch (error) {
     console.log(error);
     throw error;
