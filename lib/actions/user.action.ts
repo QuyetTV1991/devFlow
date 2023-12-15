@@ -102,16 +102,19 @@ export async function deleteUser(userId: DeleteUserParams) {
   }
 }
 
-export async function getAllUses(params: GetAllUsersParams) {
+export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDataBase();
 
+    // Detructs the params
+    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+
     // Find all users
-    const allUsers = await User.find({});
+    const users = await User.find({}).sort({ createdAt: -1 });
 
-    if (!allUsers) console.log("somethings went wrong");
+    if (!users) console.log("somethings went wrong");
 
-    return allUsers;
+    return { users };
   } catch (error) {
     console.log(error);
     throw error;

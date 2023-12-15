@@ -1,20 +1,51 @@
-import { IUser } from "@/database/user.model";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RenderTag from "../RenderTag";
+import { getTopInteractedTags } from "@/lib/actions/tag.action";
+import { Badge } from "@/components/ui/badge";
 
 interface UserCardProps {
-  user: IUser;
+  user: {
+    _id: string;
+    clerkId: string;
+    picture: string;
+    name: string;
+    username: string;
+  };
+}
+interface Tag {
+  _id: string | number;
+  name: string;
+  // Other properties if applicable...
 }
 
 const UserCard = ({ user }: UserCardProps) => {
+  // const interactedTags = await getTopInteractedTags({ userId: user._id });
+  const [interactedTags, setInteractedTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tags = await getTopInteractedTags({
+          userId: user._id.toString(),
+        });
+        setInteractedTags(tags);
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    };
+
+    fetchData();
+  }, [user._id]);
   return (
     <Link
       href={`profile/${user.clerkId}`}
       className="shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px]"
     >
-      <article className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8">
+      <div className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8">
         <Image
           src={user.picture}
           alt={user.name}
@@ -31,13 +62,17 @@ const UserCard = ({ user }: UserCardProps) => {
           </p>
         </div>
         <div className="mt-5">
-          <div className="flex items-center gap-2">
-            <RenderTag tag="java" _id="1" />
-            <RenderTag tag="nextjs" _id="2" />
-            <RenderTag tag="html" _id="3" />
-          </div>
+          {interactedTags.length > 0 ? (
+            <div className="flex items-center gap-2">
+              {interactedTags.map((tag, index) => (
+                <RenderTag key={index} tag={tag.name} _id={tag._id} />
+              ))}
+            </div>
+          ) : (
+            <Badge>No tags yet</Badge>
+          )}
         </div>
-      </article>
+      </div>
     </Link>
   );
 };
