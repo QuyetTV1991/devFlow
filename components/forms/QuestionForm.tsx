@@ -60,8 +60,7 @@ const QuestionForm = ({
         title: values.title,
         content: values.explanation,
         tags: values.tags,
-        // @ts-ignore
-        author: JSON.parse(mongoUserId),
+        author: JSON.parse(mongoUserId!),
         path: pathname,
       });
 
