@@ -1,17 +1,17 @@
+import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
 import TagCard from "@/components/shared/cards/TagCard";
 import Filters from "@/components/shared/filters/Filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { TagFilters } from "@/contants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
-import Link from "next/link";
 import React from "react";
 
 const Page = async () => {
   const results = await getAllTags({});
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900">All Users</h1>
+      <h1 className="h1-bold text-dark100_light900">Tags</h1>
       <article className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
           route="/community"
@@ -30,12 +30,12 @@ const Page = async () => {
         {results.tags.length > 0 ? (
           results.tags.map((tag, index) => <TagCard key={index} tag={tag} />)
         ) : (
-          <div className="paragraph-regular text-dark200_light800 mx-auto max-w-4xl text-center">
-            <p>No tags yet</p>
-            <Link href="/sign-up" className="mt-2 font-bold text-accent-blue">
-              Let create one first!
-            </Link>
-          </div>
+          <NoResult
+            title={"No Tags Found"}
+            description={"It looks like there are no tags found"}
+            link={"/ask-question"}
+            linkTitle={"Ask a question"}
+          />
         )}
       </section>
 
