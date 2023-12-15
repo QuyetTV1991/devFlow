@@ -40,7 +40,7 @@ export async function getAllTags(params: GetAllTagsParams) {
     // const { page = 1, pageSize = 20, filter, searchQuery } = params;
 
     // Find all users
-    const tags = await Tag.find({}).sort({ createdAt: -1 });
+    const tags = await Tag.find({}).sort({ createdOn: -1 });
 
     if (!tags) console.log("somethings went wrong");
 
