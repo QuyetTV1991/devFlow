@@ -4,7 +4,7 @@ import React from "react";
 
 interface RenderStatProps {
   imgUrl: string;
-  count: number;
+  count: number | string;
   type: string;
 }
 
@@ -18,12 +18,18 @@ const RenderStat = ({ imgUrl, count, type }: RenderStatProps) => {
         height={16}
         className="object-contain"
       />
-      <p className="small-medium text-dark400_light800 flex items-center gap-1">
-        {formatNumbers(count)}
-        <span className="small-regular line-clamp-1">
-          {` ${formatType(count, type)}`}
-        </span>
-      </p>
+      {type === "time" ? (
+        <p className="small-medium text-dark400_light800 flex items-center gap-1">
+          {count}
+        </p>
+      ) : (
+        <p className="small-medium text-dark400_light800 flex items-center gap-1">
+          {formatNumbers(Number(count))}
+          <span className="small-regular line-clamp-1">
+            {` ${formatType(Number(count), type)}`}
+          </span>
+        </p>
+      )}
     </div>
   );
 };
