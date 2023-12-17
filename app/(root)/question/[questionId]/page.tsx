@@ -3,7 +3,9 @@ import ParseHTML from "@/components/shared/ParseHTML";
 import RenderStat from "@/components/shared/RenderStat";
 import RenderTag from "@/components/shared/RenderTag";
 import { getQuestionById } from "@/lib/actions/question.action";
+import { getUserById } from "@/lib/actions/user.action";
 import { getTimeStamp } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -11,6 +13,14 @@ import React from "react";
 const QuestionDetail = async ({ params }: any) => {
   const { questionId } = params;
   const question = await getQuestionById({ questionId });
+  const { userId: clerkId } = auth();
+
+  let mongoesUer;
+
+  if (clerkId) {
+    mongoesUer = await getUserById({ userId: clerkId });
+  }
+
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -63,7 +73,11 @@ const QuestionDetail = async ({ params }: any) => {
         ))}
       </div>
 
-      <Answer />
+      <Answer
+        // authorId is author of who answered, not author of who asked
+        authorId={JSON.stringify(mongoesUer?._id)}
+        questionId={questionId}
+      />
     </>
   );
 };
