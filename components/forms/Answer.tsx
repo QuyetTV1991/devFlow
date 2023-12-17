@@ -16,11 +16,19 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { CreateAnswer } from "@/lib/actions/answer.action";
+import { usePathname } from "next/navigation";
 
-const Answer = () => {
+interface AnswerProps {
+  authorId: string;
+  questionId: string;
+}
+
+const Answer = ({ authorId, questionId }: AnswerProps) => {
+  const pathname = usePathname();
   const editorRef = useRef(null);
   const { mode } = useTheme();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState("initial");
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -29,7 +37,32 @@ const Answer = () => {
     },
   });
 
-  const handleCreateAnswer = () => {};
+  const handleCreateAnswer = async (data: z.infer<typeof AnswerSchema>) => {
+    setStatus("submitting");
+
+    try {
+      await CreateAnswer({
+        content: data.answer,
+        author: authorId,
+        question: questionId,
+        path: pathname,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent("");
+      }
+
+      setStatus("success");
+    } catch (error) {
+      console.log(error);
+      setStatus("error");
+    }
+  };
+
+  const isSubmitting = status === "submitting";
 
   return (
     <div className="mt-4">
@@ -112,7 +145,7 @@ const Answer = () => {
 
           <div className="flex justify-end">
             <Button
-              type="button"
+              type="submit"
               className="primary-gradient w-fit text-white"
               disabled={isSubmitting}
             >
