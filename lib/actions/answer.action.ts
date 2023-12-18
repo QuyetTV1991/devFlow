@@ -5,19 +5,23 @@ import { connectToDataBase } from "../mongoose";
 import { CreateAnswerParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+import mongoose from "mongoose";
 
 export async function CreateAnswer(params: CreateAnswerParams) {
   connectToDataBase();
   try {
     // Destructure params
     const { content, author, question, path } = params;
+    const authorId = new mongoose.Types.ObjectId(author);
 
     // create answer
     const newAnswer = new Answer({
       content,
-      author,
+      authorId,
       question,
     });
+
+    if (!newAnswer) throw Error("Answer was not create");
 
     // Populate Answer to Question
     await Question.findByIdAndUpdate(question, {
