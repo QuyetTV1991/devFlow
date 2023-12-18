@@ -5,19 +5,17 @@ import { connectToDataBase } from "../mongoose";
 import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
-import mongoose from "mongoose";
 
 export async function CreateAnswer(params: CreateAnswerParams) {
   connectToDataBase();
   try {
     // Destructure params
     const { content, author, question, path } = params;
-    const authorId = new mongoose.Types.ObjectId(author);
 
     // create answer
     const newAnswer = await Answer.create({
       content,
-      author: authorId,
+      author,
       question,
     });
 
@@ -45,7 +43,9 @@ export async function GetAllAnswer(params: GetAnswersParams) {
     const { questionId } = params;
 
     // Get all answer by questionId
-    const answers = await Answer.find({ question: questionId });
+    const answers = await Answer.find({ question: questionId })
+      .populate("author", "_id clerkId name picture")
+      .sort({ createdAt: -1 });
 
     // If Failed
     if (!answers || answers.length === 0)
