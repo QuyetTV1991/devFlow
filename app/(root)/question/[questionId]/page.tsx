@@ -67,7 +67,7 @@ const QuestionDetail = async ({ params }: any) => {
 
       <ParseHTML data={question.content} />
 
-      <div className="flex mt-8 flex-wrap gap-2">
+      <div className="mt-8 flex flex-wrap gap-2">
         {question.tags.map((tag: any, index: number) => (
           <RenderTag tag={tag.name} _id={tag._id} key={index} />
         ))}
