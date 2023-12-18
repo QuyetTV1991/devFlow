@@ -120,3 +120,19 @@ export async function getAllUsers(params: GetAllUsersParams) {
     throw error;
   }
 }
+
+export async function getUserByMongoId(params: GetUserByIdParams) {
+  try {
+    connectToDataBase();
+    const { userId } = params;
+    // Find the user based on Mongo Id
+    const user = await User.findById({ _id: userId });
+
+    if (!user) console.log("cant found");
+
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

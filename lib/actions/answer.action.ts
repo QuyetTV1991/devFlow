@@ -2,7 +2,7 @@
 
 import Answer from "@/database/answer.model";
 import { connectToDataBase } from "../mongoose";
-import { CreateAnswerParams } from "./shared.types";
+import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import mongoose from "mongoose";
@@ -15,9 +15,9 @@ export async function CreateAnswer(params: CreateAnswerParams) {
     const authorId = new mongoose.Types.ObjectId(author);
 
     // create answer
-    const newAnswer = new Answer({
+    const newAnswer = await Answer.create({
       content,
-      authorId,
+      author: authorId,
       question,
     });
 
@@ -30,10 +30,30 @@ export async function CreateAnswer(params: CreateAnswerParams) {
 
     // TODO: add interaction...
 
-    await newAnswer.save();
     revalidatePath(path);
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+export async function GetAllAnswer(params: GetAnswersParams) {
+  try {
+    connectToDataBase();
+
+    // Destructe params
+    const { questionId } = params;
+
+    // Get all answer by questionId
+    const answers = await Answer.find({ question: questionId });
+
+    // If Failed
+    if (!answers || answers.length === 0)
+      throw new Error("cannot get all question from questionId");
+
+    return { answers };
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }
