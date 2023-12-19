@@ -47,10 +47,6 @@ export async function GetAllAnswer(params: GetAnswersParams) {
       .populate("author", "_id clerkId name picture")
       .sort({ createdAt: -1 });
 
-    // If Failed
-    if (!answers || answers.length === 0)
-      throw new Error("cannot get all question from questionId");
-
     return { answers };
   } catch (error) {
     console.error(error);

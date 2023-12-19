@@ -4,7 +4,7 @@ import { AnswerFilters } from "@/contants/filters";
 import { GetAllAnswer } from "@/lib/actions/answer.action";
 import Link from "next/link";
 import Image from "next/image";
-import { getTimeStamp } from "@/lib/utils";
+import { formatNumbers, getTimeStamp, formatType } from "@/lib/utils";
 import ParseHTML from "./ParseHTML";
 
 interface AllAnswersProps {
@@ -27,7 +27,9 @@ const AllAnswers = async ({
   return (
     <div className="mt-11">
       <div className="flex items-center justify-between">
-        <h3 className="primary-text-gradient">{totalAnswers} Answers</h3>
+        <h3 className="primary-text-gradient">
+          {formatNumbers(totalAnswers)} {formatType(totalAnswers, "Answer")}
+        </h3>
         <Filters filters={AnswerFilters} />
       </div>
 
