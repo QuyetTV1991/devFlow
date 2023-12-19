@@ -3,6 +3,7 @@ import AllAnswers from "@/components/shared/AllAnswers";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderStat from "@/components/shared/RenderStat";
 import RenderTag from "@/components/shared/RenderTag";
+import Votes from "@/components/shared/Votes";
 // import AnswerCard from "@/components/shared/cards/AnswerCard";
 // import Filters from "@/components/shared/filters/Filters";
 // import { AnswerFilters } from "@/contants/filters";
@@ -45,7 +46,18 @@ const QuestionDetail = async ({ params }: any) => {
               {question.author.name}
             </p>
           </Link>
-          <div className="flex justify-end">VOTING</div>
+          <div className="flex justify-end">
+            <Votes
+              type="question"
+              itemId={questionId}
+              userId={mongoesUer?._id}
+              upvotes={question.upvotes.length}
+              hasupVoted={question.upvotes.includes(mongoesUer?._id)}
+              downvotes={question.downvotes.length}
+              hasdownVoted={question.downvotes.includes(mongoesUer?._id)}
+              hasSaved={(mongoesUer?.saved ?? []).includes(questionId)}
+            />
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {question.title}
