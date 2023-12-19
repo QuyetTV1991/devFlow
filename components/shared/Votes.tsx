@@ -25,7 +25,8 @@ const Votes = ({
   hasdownVoted,
   hasSaved,
 }: VotesProps) => {
-  const handleVote = (type: string) => {};
+  const handleVote = (action: string) => {};
+  const handleSave = () => {};
   return (
     <div className="flex gap-5">
       <div className="flex-center gap-2.5">
@@ -68,19 +69,19 @@ const Votes = ({
             </p>
           </div>
         </div>
-
-        <Image
-          src={
-            hasSaved
-              ? "/assets/icons/star-filled.svg"
-              : "/assets/icons/star-red.svg"
-          }
-          alt="upvote"
-          width={18}
-          height={18}
-          className="cursor-pointer"
-        />
       </div>
+      <Image
+        src={
+          hasSaved
+            ? "/assets/icons/star-filled.svg"
+            : "/assets/icons/star-red.svg"
+        }
+        alt="star"
+        width={18}
+        height={18}
+        className="cursor-pointer"
+        onClick={handleSave}
+      />
     </div>
   );
 };

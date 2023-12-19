@@ -7,6 +7,7 @@ import {
   CreateQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
+  QuestionVoteParams,
 } from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -101,6 +102,43 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
     return question;
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+export async function VoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    // Find the question base on questionId
+    const question = await Question.findById(questionId);
+
+    // Check if question exists
+    if (!question) throw new Error("Cannot find the question");
+
+    // Update the upvote and downvote
+    // If upvote
+    if (hasupVoted && !hasdownVoted) {
+      question.upvotes.push(userId);
+
+      // Remove the userID from downvotes if they had previous downvote
+      question.downvotes.pull(userId);
+    }
+
+    // If downvote
+    if (hasdownVoted && !hasupVoted) {
+      question.downvotes.push(userId);
+
+      // Remove the userID from downvotes if they had previous downvote
+      question.upvotes.pull(userId);
+    }
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }
