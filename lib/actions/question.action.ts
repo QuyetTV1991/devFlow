@@ -106,6 +106,81 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
   }
 }
 
+export async function upvoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    // use updateQuery to handle update
+    let updateQuery = {};
+
+    if (hasupVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasdownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    // Find and update the question base on questionId
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) throw new Error("Quesiton not found");
+
+    // Increment author's reputation
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function downvoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    // use updateQuery to handle update
+    let updateQuery = {};
+
+    if (hasdownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasupVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+
+    // Find and update the question base on questionId
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) throw new Error("Quesiton not found");
+
+    // Increment author's reputation
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// This function need to be test
 export async function VoteQuestion(params: QuestionVoteParams) {
   try {
     connectToDataBase();
