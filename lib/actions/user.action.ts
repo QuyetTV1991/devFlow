@@ -9,9 +9,11 @@ import {
   ToggleSaveQuestionParams,
   GetUserByIdParams,
   UpdateUserParams,
+  GetSavedQuestionsParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
 
 export async function getUserById({ userId }: GetUserByIdParams) {
   try {
@@ -176,4 +178,27 @@ export async function saveQuestion(params: ToggleSaveQuestionParams) {
     console.error(error);
     throw error;
   }
+}
+
+export async function getSavedQuestion(params: GetSavedQuestionsParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { clerkId } = params;
+
+    // Find user by ClerkId
+    const user = await User.findOne({ clerkId }).populate({
+      path: "saved",
+      populate: [
+        { path: "tags", model: Tag, select: "_id name" },
+        { path: "author", model: User, select: "_id clerkId name picture" },
+      ],
+    });
+
+    // If fail
+    if (!user) throw new Error("User not found");
+
+    return { savedQuestions: user.saved };
+  } catch (error) {}
 }
