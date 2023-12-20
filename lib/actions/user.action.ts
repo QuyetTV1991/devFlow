@@ -152,13 +152,24 @@ export async function saveQuestion(params: ToggleSaveQuestionParams) {
     if (!user) throw new Error("Cannot find the user");
 
     if (user.saved.includes(questionId)) {
-      user.saved.pull(questionId);
-      user.save();
+      // Remove question from saved
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: { saved: questionId },
+        },
+        { new: true }
+      );
     } else {
-      user.saved.push(questionId);
-      user.save();
+      // Add question to saved
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $addToSet: { saved: questionId },
+        },
+        { new: true }
+      );
     }
-    console.log(user.saved);
 
     revalidatePath(path);
   } catch (error) {
