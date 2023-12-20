@@ -5,6 +5,7 @@ import {
   downvoteQuestion,
   upvoteQuestion,
 } from "@/lib/actions/question.action";
+import { saveQuestion } from "@/lib/actions/user.action";
 import { formatNumbers } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -81,7 +82,17 @@ const Votes = ({
       // TODO: show a toast
     }
   };
-  const handleSave = () => {};
+  const handleSave = async () => {
+    if (!userId) {
+      return;
+    }
+
+    await saveQuestion({
+      userId: JSON.parse(userId),
+      questionId: itemId,
+      path: pathname,
+    });
+  };
   return (
     <div className="flex gap-5">
       <div className="flex-center gap-2.5">
