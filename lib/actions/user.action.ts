@@ -6,6 +6,7 @@ import {
   CreateUserParams,
   DeleteUserParams,
   GetAllUsersParams,
+  ToggleSaveQuestionParams,
   GetUserByIdParams,
   UpdateUserParams,
 } from "./shared.types";
@@ -133,6 +134,35 @@ export async function getUserByMongoId(params: GetUserByIdParams) {
     return user;
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+export async function saveQuestion(params: ToggleSaveQuestionParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { userId, questionId, path } = params;
+
+    // Find user and update based on userId
+    const user = await User.findById(userId);
+
+    // If failed
+    if (!user) throw new Error("Cannot find the user");
+
+    if (user.saved.includes(questionId)) {
+      user.saved.pull(questionId);
+      user.save();
+    } else {
+      user.saved.push(questionId);
+      user.save();
+    }
+    console.log(user.saved);
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }
