@@ -199,7 +199,6 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
     // If fail
     if (!user) throw new Error("User not found");
 
-    console.log(user.saved);
     return { savedQuestions: user.saved };
   } catch (error) {}
 }
