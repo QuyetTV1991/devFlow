@@ -92,7 +92,7 @@ const QuestionDetail = async ({ params }: any) => {
 
       <AllAnswers
         questionId={question._id}
-        userId={JSON.stringify(mongoesUer?._id)}
+        userId={`${mongoesUer?._id}`}
         totalAnswers={question.answers.length}
       />
       {/* <div className="mt-11">

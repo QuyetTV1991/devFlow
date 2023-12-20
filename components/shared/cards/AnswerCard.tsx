@@ -17,6 +17,7 @@ const AnswerCard = async ({
   createdAt,
 }: AnswerCardProps) => {
   const userAuthor = await getUserByMongoId({ userId: authorId });
+  console.log({ userAuthor });
 
   return (
     <article className="light-border border-b py-10">
