@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 "use server";
 
 import User, { IUser } from "@/database/user.model";
@@ -14,6 +15,7 @@ import {
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
+import { FilterQuery } from "mongoose";
 
 export async function getUserById({ userId }: GetUserByIdParams) {
   try {
@@ -185,11 +187,20 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
     connectToDataBase();
 
     // Destructure params
-    const { clerkId } = params;
+    const { clerkId, page = 1, pageSize = 10, filter, searchQuery } = params;
+
+    // Define Query
+    const query: FilterQuery<typeof Question> = searchQuery
+      ? { title: { $regex: new RegExp(searchQuery, "i") } }
+      : {};
 
     // Find user by ClerkId
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
+      match: query,
+      options: {
+        sort: { createdAt: -1 },
+      },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
         { path: "author", model: User, select: "_id clerkId name picture" },
@@ -199,6 +210,7 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
     // If fail
     if (!user) throw new Error("User not found");
 
-    return { savedQuestions: user.saved };
+    const savedQuestions = user.saved;
+    return { questions: savedQuestions };
   } catch (error) {}
 }
