@@ -59,7 +59,7 @@ const RightSidebar = () => {
         <div className="mt-7 flex w-full flex-col gap-[30px]">
           {questionsList.map((question, index) => (
             <Link
-              href={`question/${question._id}`}
+              href={`/question/${question._id}`}
               key={index}
               className="flex cursor-pointer items-center justify-between gap-7"
             >
