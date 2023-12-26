@@ -85,3 +85,14 @@ export const formUrlQuery = ({
     }
   );
 };
+
+export const getJoinedDate = (date: Date): string => {
+  // Extract the month and the year from the Date object
+  const month = date.toLocaleDateString("default", { month: "long" });
+  const year = date.getFullYear();
+
+  // Create the joined date string (e.g., "September 2023")
+  const joinedDate = `${month} ${year}`;
+
+  return joinedDate;
+};
