@@ -76,7 +76,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
 
       <div className="mt-10">
-        <h4>Stats</h4>
+        <h4 className="h3-semibold text-dark200_light900">Stats</h4>
         <div className="mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4">
           <Stats totalAnswers={totalAnswers} totalQuestions={totalQuestions} />
           <Stats
