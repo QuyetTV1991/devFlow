@@ -56,19 +56,18 @@ const Stats = ({ totalAnswers, totalQuestions }: StatsProps) => {
             </p>
           </div>
         </div>
+        <Medal medal="Gold" count={0} iconUrl="/assets/icons/gold-medal.svg" />
+        <Medal
+          medal="Silver"
+          count={0}
+          iconUrl="/assets/icons/silver-medal.svg"
+        />
+        <Medal
+          medal="Bronze"
+          count={0}
+          iconUrl="/assets/icons/bronze-medal.svg"
+        />
       </div>
-
-      <Medal medal="Gold" count={0} iconUrl="/assets/icons/gold-medal.svg" />
-      <Medal
-        medal="Silver"
-        count={0}
-        iconUrl="/assets/icons/silver-medal.svg"
-      />
-      <Medal
-        medal="Bronze"
-        count={0}
-        iconUrl="/assets/icons/bronze-medal.svg"
-      />
     </>
   );
 };
