@@ -25,7 +25,7 @@ const Stats = ({
             <Image src={iconUrl} alt="icon medal" width={40} height={50} />
             <div>
               <p className="paragraph-semibold text-dark200_light900">
-                {formatNumbers(count)}
+                {formatNumbers(count ?? 0)}
               </p>
               <p className="body-medium text-dark400_light700">
                 {medal} {formatType(count, "Badge")}
