@@ -4,7 +4,6 @@ import Image from "next/image";
 interface StatsProps {
   totalAnswers?: number;
   totalQuestions?: number;
-  type: string;
   medal?: "Gold" | "Silver" | "Bronze";
   count?: number;
   iconUrl?: string;
@@ -13,16 +12,15 @@ interface StatsProps {
 const Stats = ({
   totalAnswers,
   totalQuestions,
-  type,
   medal,
   count,
   iconUrl,
 }: StatsProps) => {
   return (
     <>
-      {type === "medal" && iconUrl ? (
+      {iconUrl ? (
         <>
-          <div className="light-border background-light900_dark300 flex flex-wrap items-center justify-evenly gap-4 rounded-md border p-6 shadow-light-300 dark:shadow-dark-200">
+          <div className="light-border background-light900_dark300 flex flex-wrap items-center justify-start gap-4 rounded-md border p-6 shadow-light-300 dark:shadow-dark-200">
             <Image src={iconUrl} alt="icon medal" width={40} height={50} />
             <div>
               <p className="paragraph-semibold text-dark200_light900">
