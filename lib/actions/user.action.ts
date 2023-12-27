@@ -242,3 +242,36 @@ export async function getUserInfo(params: GetUserByIdParams) {
     throw error;
   }
 }
+
+export async function getQuestionsByUserId(params: GetUserByIdParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { userId } = params;
+
+    // Find question base UserId (MongoDb _id)
+    const questions = await Question.find({ author: userId })
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+    // If Failed
+    if (!questions)
+      throw new Error(
+        "Something went wrong while fetching question from userID"
+      );
+
+    return { questions };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
