@@ -5,6 +5,7 @@ import { getJoinedDate } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { SignedIn, auth } from "@clerk/nextjs";
 import ProfileLink from "@/components/shared/ProfileLink";
+import Stats from "@/components/shared/Stats";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -74,9 +75,33 @@ const Page = async ({ params, searchParams }: URLProps) => {
         </div>
       </div>
 
-      <div>
-        <p>{totalQuestions}</p>
-        <p>{totalAnswers}</p>
+      <div className="mt-10">
+        <h4>Stats</h4>
+        <div className="mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4">
+          <Stats
+            type="answer/questions"
+            totalAnswers={totalAnswers}
+            totalQuestions={totalQuestions}
+          />
+          <Stats
+            type="medal"
+            medal="Gold"
+            count={0}
+            iconUrl="/assets/icons/gold-medal.svg"
+          />
+          <Stats
+            type="medal"
+            medal="Silver"
+            count={0}
+            iconUrl="/assets/icons/silver-medal.svg"
+          />
+          <Stats
+            type="medal"
+            medal="Bronze"
+            count={0}
+            iconUrl="/assets/icons/bronze-medal.svg"
+          />
+        </div>
       </div>
 
       <div className="mt-10 flex gap-10">
