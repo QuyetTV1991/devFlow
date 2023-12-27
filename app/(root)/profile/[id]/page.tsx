@@ -5,6 +5,7 @@ import { getJoinedDate } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { SignedIn, auth } from "@clerk/nextjs";
 import ProfileLink from "@/components/shared/ProfileLink";
+import QuestionTab from "@/components/shared/tabs/QuestionTab";
 import Stats from "@/components/shared/Stats";
 import Image from "next/image";
 import Link from "next/link";
@@ -89,7 +90,9 @@ const Page = async ({ params, searchParams }: URLProps) => {
               Answer
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="top-posts">POSTS</TabsContent>
+          <TabsContent value="top-posts">
+            <QuestionTab userId={`${user?._id}`} />
+          </TabsContent>
           <TabsContent value="answers">ANSWERS</TabsContent>
         </Tabs>
       </div>
