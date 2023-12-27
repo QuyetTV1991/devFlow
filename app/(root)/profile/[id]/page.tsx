@@ -76,25 +76,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
 
       <div className="mt-10">
-        <h4>Stats</h4>
-        <div className="mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4">
-          <Stats totalAnswers={totalAnswers} totalQuestions={totalQuestions} />
-          <Stats
-            medal="Gold"
-            count={0}
-            iconUrl="/assets/icons/gold-medal.svg"
-          />
-          <Stats
-            medal="Silver"
-            count={0}
-            iconUrl="/assets/icons/silver-medal.svg"
-          />
-          <Stats
-            medal="Bronze"
-            count={0}
-            iconUrl="/assets/icons/bronze-medal.svg"
-          />
-        </div>
+        <Stats totalAnswers={totalAnswers} totalQuestions={totalQuestions} />
       </div>
 
       <div className="mt-10 flex gap-10">
