@@ -3,9 +3,9 @@ import Image from "next/image";
 import { formatNumbers, formatType } from "@/lib/utils";
 
 interface MedalProps {
-  medal?: "Gold" | "Silver" | "Bronze";
-  count?: number;
-  iconUrl?: string;
+  medal: "Gold" | "Silver" | "Bronze";
+  count: number;
+  iconUrl: string;
 }
 
 const Medal = ({ iconUrl, medal, count }: MedalProps) => {
