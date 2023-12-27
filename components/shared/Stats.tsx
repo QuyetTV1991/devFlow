@@ -28,7 +28,7 @@ const Stats = ({
                 {formatNumbers(count ?? 0)}
               </p>
               <p className="body-medium text-dark400_light700">
-                {medal} {formatType(count, "Badge")}
+                {medal} {formatType(count ?? 0, "Badge")}
               </p>
             </div>
           </div>
