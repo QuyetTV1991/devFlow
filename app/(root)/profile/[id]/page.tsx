@@ -4,6 +4,7 @@ import { getUserInfo } from "@/lib/actions/user.action";
 import { getJoinedDate } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { SignedIn, auth } from "@clerk/nextjs";
+import ProfileLink from "@/components/shared/ProfileLink";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -33,50 +34,24 @@ const Page = async ({ params, searchParams }: URLProps) => {
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
               {user?.portfolioWebsite && (
-                <div className="flex-center gap-1">
-                  <Image
-                    src="/assets/icons/link.svg"
-                    alt="Porfolio"
-                    width={20}
-                    height={20}
-                    className=""
-                  />
-                  <Link
-                    href={user.portfolioWebsite}
-                    className="paragraph-medium text-accent-blue"
-                  >
-                    Portfolio
-                  </Link>
-                </div>
+                <ProfileLink
+                  imgUrl="/assets/icons/link.svg"
+                  href={user.portfolioWebsite}
+                  title="Portfolio"
+                />
               )}
 
               {user?.location && (
-                <div className="flex-center gap-1">
-                  <Image
-                    src="/assets/icons/location.svg"
-                    alt="Location"
-                    width={20}
-                    height={20}
-                    className=""
-                  />
-                  <p className="paragraph-medium text-dark400_light700">
-                    {user.location}
-                  </p>
-                </div>
+                <ProfileLink
+                  imgUrl="/assets/icons/location.svg"
+                  title={user.location}
+                />
               )}
 
-              <div className="flex-center gap-1">
-                <Image
-                  src="/assets/icons/calendar.svg"
-                  alt="calendar"
-                  width={20}
-                  height={20}
-                  className=""
-                />
-                <p className="paragraph-regular text-dark200_light800">
-                  Joined {getJoinedDate(user.joinedAt)}
-                </p>
-              </div>
+              <ProfileLink
+                imgUrl="/assets/icons/calendar.svg"
+                title={`Joined ${getJoinedDate(user.joinedAt)}`}
+              />
 
               {user?.bio && (
                 <p className="paragraph-regular text-dark400_light700">
