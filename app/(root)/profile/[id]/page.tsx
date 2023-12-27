@@ -4,7 +4,7 @@ import { getUserInfo } from "@/lib/actions/user.action";
 import { getJoinedDate } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { SignedIn, auth } from "@clerk/nextjs";
-import { ProfileLink } from "@/components/shared/ProfileLink";
+import ProfileLink from "@/components/shared/ProfileLink";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
