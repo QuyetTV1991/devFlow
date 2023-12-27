@@ -14,7 +14,7 @@ interface CreatorProps {
 
 const Creator = ({ creator, createdAt }: CreatorProps) => {
   return (
-    <Link href={`/profile/${creator._id}`} className="flex-center gap-1">
+    <Link href={`/profile/${creator.clerkId}`} className="flex-center gap-1">
       <Image
         src={creator.picture}
         alt={creator.name}
