@@ -5,7 +5,7 @@ import { SearchParamsProps } from "@/types";
 
 interface QuestionTabProps extends SearchParamsProps {
   userId: string;
-  clerkId?: string;
+  clerkId?: string | null;
 }
 
 const QuestionTab = async ({
