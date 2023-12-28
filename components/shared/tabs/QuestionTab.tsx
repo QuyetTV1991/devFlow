@@ -11,7 +11,7 @@ const QuestionTab = async ({ userId }: QuestionTabProps) => {
   const allQuestions = result.questions;
   return (
     <div>
-      {allQuestions.length > 0 ??
+      {allQuestions.length > 0 &&
         allQuestions.map((question, index) => (
           <QuestionCard
             key={index}
