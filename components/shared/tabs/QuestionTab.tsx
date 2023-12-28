@@ -7,7 +7,7 @@ interface QuestionTabProps {
 }
 
 const QuestionTab = async ({ userId }: QuestionTabProps) => {
-  const result = await getQuestionsByUserId({ userId: JSON.parse(userId) });
+  const result = await getQuestionsByUserId({ userId });
   const allQuestions = result.questions;
   return (
     <div>
