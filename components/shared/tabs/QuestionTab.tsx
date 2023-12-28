@@ -1,10 +1,13 @@
 import React from "react";
 import QuestionCard from "../cards/QuestionCard";
-import { URLProps } from "@/types";
 import { getQuestionsByUserId } from "@/lib/actions/user.action";
 
-const QuestionTab = async ({ params }: URLProps) => {
-  const result = await getQuestionsByUserId({ userId: params.id });
+interface QuestionTab {
+  userId: string;
+}
+
+const QuestionTab = async ({ userId }: QuestionTabProps) => {
+  const result = await getQuestionsByUserId({ userId });
   const allQuestions = result.questions;
   return (
     <div>

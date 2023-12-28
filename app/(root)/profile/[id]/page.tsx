@@ -91,7 +91,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="top-posts">
-            <QuestionTab />
+            <QuestionTab userId={user._id} />
           </TabsContent>
           <TabsContent value="answers">ANSWERS</TabsContent>
         </Tabs>
