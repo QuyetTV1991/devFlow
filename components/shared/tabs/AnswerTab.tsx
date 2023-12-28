@@ -1,27 +1,31 @@
 import React from "react";
 import AnswerCard from "../cards/AnswerCard";
 import { getAnswersByUserId } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 
-interface AnswerTabProps {
+interface AnswerTabProps extends SearchParamsProps {
   userId: string;
+  clerkId?: string | null;
 }
 
-const AnswerTab = async ({ userId }: AnswerTabProps) => {
+const AnswerTab = async ({ userId, searchParams, clerkId }: AnswerTabProps) => {
   const result = await getAnswersByUserId({ userId });
   const allAnswers = result.answers;
   return (
-    <div>
+    <>
       {allAnswers.length > 0 &&
         allAnswers.map((answer: any, index: number) => (
           <AnswerCard
             key={index}
+            _id={answer._id}
             question={answer.question}
             author={answer.author}
             upvotes={answer.upvotes}
             createdAt={answer.createdAt}
+            clerkId={clerkId}
           />
         ))}
-    </div>
+    </>
   );
 };
 

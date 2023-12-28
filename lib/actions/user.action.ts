@@ -11,6 +11,7 @@ import {
   GetUserByIdParams,
   UpdateUserParams,
   GetSavedQuestionsParams,
+  GetUserStatsParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
@@ -243,15 +244,19 @@ export async function getUserInfo(params: GetUserByIdParams) {
   }
 }
 
-export async function getQuestionsByUserId(params: GetUserByIdParams) {
+export async function getQuestionsByUserId(params: GetUserStatsParams) {
   try {
     connectToDataBase();
 
     // Destructure params
-    const { userId } = params;
+    const { userId, page = 1, pageSize = 10 } = params;
+
+    // Count total Question
+    const totalQuestions = await Question.countDocuments({ author: userId });
 
     // Find question base UserId (MongoDb _id)
     const questions = await Question.find({ author: userId })
+      .sort({ views: -1, upvotes: -1 })
       .populate({
         path: "tags",
         model: Tag,
@@ -269,22 +274,26 @@ export async function getQuestionsByUserId(params: GetUserByIdParams) {
         "Something went wrong while fetching question from userID"
       );
 
-    return { questions };
+    return { questions, totalQuestions };
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
 
-export async function getAnswersByUserId(params: GetUserByIdParams) {
+export async function getAnswersByUserId(params: GetUserStatsParams) {
   try {
     connectToDataBase();
 
     // Destructure params
-    const { userId } = params;
+    const { userId, page = 1, pageSize = 10 } = params;
+
+    // Count total Answer
+    const totalAnswers = await Answer.countDocuments({ author: userId });
 
     // Find question base UserId (MongoDb _id)
     const answers = await Answer.find({ author: userId })
+      .sort({ upvotes: -1 })
       .populate({
         path: "question",
         model: Question,
@@ -302,7 +311,7 @@ export async function getAnswersByUserId(params: GetUserByIdParams) {
         "Something went wrong while fetching answers from userID"
       );
 
-    return { answers };
+    return { answers, totalAnswers };
   } catch (error) {
     console.error(error);
     throw error;
