@@ -275,3 +275,36 @@ export async function getQuestionsByUserId(params: GetUserByIdParams) {
     throw error;
   }
 }
+
+export async function getAnswersByUserId(params: GetUserByIdParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure params
+    const { userId } = params;
+
+    // Find question base UserId (MongoDb _id)
+    const answers = await Answer.find({ author: userId })
+      .populate({
+        path: "question",
+        model: Question,
+        select: "_id title",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+    // If Failed
+    if (!answers)
+      throw new Error(
+        "Something went wrong while fetching answers from userID"
+      );
+
+    return { answers };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

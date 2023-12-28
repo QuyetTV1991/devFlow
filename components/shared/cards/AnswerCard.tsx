@@ -1,53 +1,60 @@
 import Link from "next/link";
-import Image from "next/image";
 import React from "react";
-import { getUserByMongoId } from "@/lib/actions/user.action";
+import Creator from "../creator/Creator";
+import RenderStat from "../RenderStat";
 import { getTimeStamp } from "@/lib/utils";
-import ParseHTML from "../ParseHTML";
 
 interface AnswerCardProps {
-  content: string;
-  authorId: string;
+  question: {
+    _id: string;
+    title: string;
+  }
+  author: {
+    name: string;
+    picture: string;
+    clerkId: string;
+  };
+  upvotes: string[];
   createdAt: Date;
 }
 
-const AnswerCard = async ({
-  content,
-  authorId,
+const AnswerCard = ({
+  question,
+  author,
+  upvotes,
   createdAt,
 }: AnswerCardProps) => {
-  const userAuthor = await getUserByMongoId({ userId: authorId });
-
   return (
-    <article className="light-border border-b py-10">
-      <div className="mb-8 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
-        <Link
-          href={`profile/dfdfds}`}
-          className="flex flex-1 items-start gap-1 sm:items-center"
-        >
-          <Image
-            src={userAuthor.picture}
-            alt="user profile"
-            width={18}
-            height={18}
-            className="rounded-full object-cover max-sm:mt-0.5"
-          />
-          <div className="flex flex-col sm:flex-row sm:items-center">
-            <p className="body-semibold text-dark300_light700">
-              {userAuthor.name}
-            </p>
-            <p className="small-regular text-light400_light500 mt-0.5 line-clamp-1">
-              {" "}
-              <span className="max-sm:hidden"> &bull; </span>
-              {` answered ${getTimeStamp(createdAt)}`}
-            </p>
-          </div>
-        </Link>
-        <div className="flex justify-end">Voting</div>
+    <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
+      <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
+        <div>
+          <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
+            {getTimeStamp(createdAt)}
+          </span>
+
+          <Link href={`/question/${question._id}`}>
+            <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1">
+              {question.title}
+            </h3>
+          </Link>
+        </div>
+
+        {/* if signed-in, then add eidt delete action */}
       </div>
 
-      <ParseHTML data={content} />
-    </article>
+      <div className="flex-between mt-6 flex-wrap gap-3">
+        <div>
+          <Creator creator={author} createdAt={getTimeStamp(createdAt)} />
+        </div>
+        <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
+          <RenderStat
+            imgUrl="/assets/icons/like.svg"
+            count={upvotes.length}
+            type="Vote"
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
