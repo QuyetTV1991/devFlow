@@ -13,7 +13,7 @@ const QuestionTab = async ({
   searchParams,
   clerkId,
 }: QuestionTabProps) => {
-  const result = await getQuestionsByUserId({ userId, page = 1 });
+  const result = await getQuestionsByUserId({ userId });
   const allQuestions = result.questions;
   return (
     <>
