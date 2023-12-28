@@ -10,6 +10,7 @@ import Stats from "@/components/shared/Stats";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import AnswerTab from "@/components/shared/tabs/AnswerTab";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
@@ -93,7 +94,9 @@ const Page = async ({ params, searchParams }: URLProps) => {
           <TabsContent value="top-posts">
             <QuestionTab userId={user._id} />
           </TabsContent>
-          <TabsContent value="answers">ANSWERS</TabsContent>
+          <TabsContent value="answers">
+            <AnswerTab userId={user._id} />
+          </TabsContent>
         </Tabs>
       </div>
     </>
