@@ -2,7 +2,7 @@ import React from "react";
 import QuestionCard from "../cards/QuestionCard";
 import { getQuestionsByUserId } from "@/lib/actions/user.action";
 
-interface QuestionTab {
+interface QuestionTabProps {
   userId: string;
 }
 
