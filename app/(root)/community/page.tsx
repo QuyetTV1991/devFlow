@@ -42,7 +42,9 @@ const Page = async () => {
       </section>
 
       <div className="mt-10">
-        <Pagination pageNumber={1} isNext={true} />
+        {results.users.length > 10 && (
+          <Pagination pageNumber={1} isNext={true} />
+        )}
       </div>
     </>
   );

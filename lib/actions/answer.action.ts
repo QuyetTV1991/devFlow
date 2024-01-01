@@ -2,7 +2,7 @@
 
 import Answer from "@/database/answer.model";
 import { connectToDataBase } from "../mongoose";
-import { AnswerVoteParams, CreateAnswerParams, GetAnswersParams } from "./shared.types";
+import { AnswerVoteParams, CreateAnswerParams, DeleteAnswerParams, GetAnswersParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 
@@ -125,5 +125,26 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams) {
+  try {
+    connectToDataBase()
+
+    // Detructure params
+    const { answerId, path } = params
+
+    // Find and delete Question from questionId
+    const deleltedAnswer = await Answer.findByIdAndDelete(answerId)
+
+    // If failed
+    if (!deleltedAnswer) throw new Error('Cannot find the question to delete')
+
+    // Revalidate Path
+    revalidatePath(path)
+  } catch (error) {
+    console.error(error)
+    throw error
   }
 }

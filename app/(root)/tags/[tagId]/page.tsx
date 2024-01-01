@@ -7,7 +7,6 @@ import React from "react";
 const TagDetail = async ({ params }: any) => {
   const { tagId } = params;
   const result = await getQuestionsByTagId({ tagId });
-  console.log(result);
 
   return (
     <>

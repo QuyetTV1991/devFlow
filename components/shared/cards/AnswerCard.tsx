@@ -3,6 +3,8 @@ import React from "react";
 import Creator from "../creator/Creator";
 import RenderStat from "../RenderStat";
 import { getTimeStamp } from "@/lib/utils";
+import EditDeleteAction from "../EditDeleteAction";
+import { SignedIn } from "@clerk/nextjs";
 
 interface AnswerCardProps {
   _id: string;
@@ -35,7 +37,7 @@ const AnswerCard = ({
       className="card-wrapper rounded-[10px] px-11 py-9"
     >
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
-        <div>
+        <div className="max-w-xl">
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
             {getTimeStamp(createdAt)}
           </span>
@@ -45,6 +47,11 @@ const AnswerCard = ({
         </div>
 
         {/* if signed-in, then add eidt delete action */}
+        <SignedIn>
+          {clerkId === author.clerkId && (
+            <EditDeleteAction type="Answer" _id={`${_id}`} />
+          )}
+        </SignedIn>
       </div>
 
       <div className="flex-between mt-6 flex-wrap gap-3">

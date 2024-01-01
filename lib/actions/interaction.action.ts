@@ -4,6 +4,7 @@ import Question from "@/database/question.model";
 import { connectToDataBase } from "../mongoose";
 import { ViewQuestionParams } from "./shared.types";
 import Interaction from "@/database/interaction.model";
+import { isValidObjectId } from "mongoose";
 
 export async function viewQuestion(params: ViewQuestionParams) {
   try {
@@ -17,7 +18,7 @@ export async function viewQuestion(params: ViewQuestionParams) {
       $inc: { views: 1 },
     });
 
-    if (userId) {
+    if (userId && isValidObjectId(userId)) {
       // if user had interaction already
       const existingInteraction = await Interaction.findOne({
         user: userId,

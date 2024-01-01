@@ -5,6 +5,7 @@ import { connectToDataBase } from "../mongoose";
 import Tag from "@/database/tag.model";
 import {
   CreateQuestionParams,
+  DeleteQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
@@ -180,40 +181,61 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
   }
 }
 
-// This function need to be test
-export async function VoteQuestion(params: QuestionVoteParams) {
+export async function deleteQuestion(params: DeleteQuestionParams) {
   try {
-    connectToDataBase();
+    connectToDataBase()
 
-    // Destructure params
-    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+    // Detructure params
+    const { questionId, path } = params
 
-    // Find the question base on questionId
-    const question = await Question.findById(questionId);
+    // Find and delete Question from questionId
+    const deleltedQuestion = await Question.findByIdAndDelete(questionId)
 
-    // Check if question exists
-    if (!question) throw new Error("Cannot find the question");
+    // If failed
+    if (!deleltedQuestion) throw new Error('Cannot find the question to delete')
 
-    // Update the upvote and downvote
-    // If upvote
-    if (hasupVoted && !hasdownVoted) {
-      question.upvotes.push(userId);
-
-      // Remove the userID from downvotes if they had previous downvote
-      question.downvotes.pull(userId);
-    }
-
-    // If downvote
-    if (hasdownVoted && !hasupVoted) {
-      question.downvotes.push(userId);
-
-      // Remove the userID from downvotes if they had previous downvote
-      question.upvotes.pull(userId);
-    }
-
-    revalidatePath(path);
+    // Revalidate Path
+    revalidatePath(path)
   } catch (error) {
-    console.error(error);
-    throw error;
+    console.error(error)
+    throw error
   }
 }
+
+// This function need to be test
+// export async function VoteQuestion(params: QuestionVoteParams) {
+//   try {
+//     connectToDataBase();
+
+//     // Destructure params
+//     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+//     // Find the question base on questionId
+//     const question = await Question.findById(questionId);
+
+//     // Check if question exists
+//     if (!question) throw new Error("Cannot find the question");
+
+//     // Update the upvote and downvote
+//     // If upvote
+//     if (hasupVoted && !hasdownVoted) {
+//       question.upvotes.push(userId);
+
+//       // Remove the userID from downvotes if they had previous downvote
+//       question.downvotes.pull(userId);
+//     }
+
+//     // If downvote
+//     if (hasdownVoted && !hasupVoted) {
+//       question.downvotes.push(userId);
+
+//       // Remove the userID from downvotes if they had previous downvote
+//       question.upvotes.pull(userId);
+//     }
+
+//     revalidatePath(path);
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// }

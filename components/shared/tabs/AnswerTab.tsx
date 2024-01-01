@@ -2,6 +2,7 @@ import React from "react";
 import AnswerCard from "../cards/AnswerCard";
 import { getAnswersByUserId } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
+import Pagination from "../Pagination";
 
 interface AnswerTabProps extends SearchParamsProps {
   userId: string;
@@ -25,6 +26,9 @@ const AnswerTab = async ({ userId, searchParams, clerkId }: AnswerTabProps) => {
             clerkId={clerkId}
           />
         ))}
+      <div className="mt-10">
+        {allAnswers.length > 10 && <Pagination pageNumber={1} isNext={true} />}
+      </div>
     </>
   );
 };
