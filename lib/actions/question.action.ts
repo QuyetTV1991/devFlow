@@ -12,6 +12,8 @@ import {
 } from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
@@ -183,22 +185,31 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
 
 export async function deleteQuestion(params: DeleteQuestionParams) {
   try {
-    connectToDataBase()
+    connectToDataBase();
 
     // Detructure params
-    const { questionId, path } = params
+    const { questionId, path } = params;
 
     // Find and delete Question from questionId
-    const deleltedQuestion = await Question.findByIdAndDelete(questionId)
+    const deleltedQuestion = await Question.findByIdAndDelete(questionId);
 
     // If failed
-    if (!deleltedQuestion) throw new Error('Cannot find the question to delete')
+    if (!deleltedQuestion)
+      throw new Error("Cannot find the question to delete");
+
+    // Update other Database relateted to deletedQuestion
+    await Answer.deleteMany({ question: questionId }); // delete all answers in the question
+    await Interaction.deleteMany({ question: questionId }); // delete all interactions with the question
+    await Tag.updateMany(
+      { questions: questionId },
+      { $pull: { questions: questionId } }
+    );
 
     // Revalidate Path
-    revalidatePath(path)
+    revalidatePath(path);
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error(error);
+    throw error;
   }
 }
 

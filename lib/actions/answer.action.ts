@@ -2,9 +2,15 @@
 
 import Answer from "@/database/answer.model";
 import { connectToDataBase } from "../mongoose";
-import { AnswerVoteParams, CreateAnswerParams, DeleteAnswerParams, GetAnswersParams } from "./shared.types";
+import {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  DeleteAnswerParams,
+  GetAnswersParams,
+} from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+import Interaction from "@/database/interaction.model";
 
 export async function CreateAnswer(params: CreateAnswerParams) {
   connectToDataBase();
@@ -130,21 +136,31 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
 
 export async function deleteAnswer(params: DeleteAnswerParams) {
   try {
-    connectToDataBase()
+    connectToDataBase();
 
     // Detructure params
-    const { answerId, path } = params
+    const { answerId, path } = params;
 
     // Find and delete Question from questionId
-    const deleltedAnswer = await Answer.findByIdAndDelete(answerId)
+    const deleltedAnswer = await Answer.findById(answerId);
 
     // If failed
-    if (!deleltedAnswer) throw new Error('Cannot find the question to delete')
+    if (!deleltedAnswer) throw new Error("Cannot find the answer to delete");
+
+    // Delete the answer
+    await deleltedAnswer.deleteOne();
+
+    // Update related Databases
+    await Question.updateMany(
+      { _id: deleltedAnswer.question },
+      { $pull: { answers: answerId } }
+    );
+    await Interaction.deleteMany({ answer: answerId });
 
     // Revalidate Path
-    revalidatePath(path)
+    revalidatePath(path);
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error(error);
+    throw error;
   }
 }

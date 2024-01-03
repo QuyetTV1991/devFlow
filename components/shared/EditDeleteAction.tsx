@@ -27,7 +27,7 @@ const EditDeleteAction = ({ _id, type }: EditDeleteActionProps) => {
     }
   };
   return (
-    <div className="flex justify-end items-center gap-5">
+    <div className="flex items-center justify-end gap-5">
       {type === "Question" && (
         <Image
           src="/assets/icons/edit.svg"
