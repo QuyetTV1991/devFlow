@@ -6,6 +6,7 @@ import Tag from "@/database/tag.model";
 import {
   CreateQuestionParams,
   DeleteQuestionParams,
+  EditQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
@@ -206,6 +207,37 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     );
 
     // Revalidate Path
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function editQuestion(params: EditQuestionParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure the params ? why don't update tags
+    const { questionId, title, content, path } = params;
+
+    // UpdateQuestion
+    const updateQuestion = {
+      title,
+      content,
+    };
+
+    // Find the question based on questionId
+    const question = await Question.findByIdAndUpdate(
+      questionId,
+      updateQuestion,
+      { new: true }
+    );
+
+    // If failed
+    if (!question) throw new Error("Somethings went wrong when edit question");
+
+    // Revalidate path
     revalidatePath(path);
   } catch (error) {
     console.error(error);

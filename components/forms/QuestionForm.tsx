@@ -19,7 +19,7 @@ import {
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
@@ -40,13 +40,18 @@ const QuestionForm = ({
   const router = useRouter();
   const pathname = usePathname();
 
+  const parsedQuestionDetails =
+    questionDetails && JSON.parse(questionDetails ?? "");
+
+  const groupTags = parsedQuestionDetails.tags.map((tag: any) => tag.name);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionFormSchema>>({
     resolver: zodResolver(QuestionFormSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetails?.title || "",
+      explanation: parsedQuestionDetails?.content || "",
+      tags: groupTags || [],
     },
   });
 
@@ -57,17 +62,30 @@ const QuestionForm = ({
     // ✅ This will be type-safe and validated.
 
     try {
-      // make an async call to your API -> create a question
-      await createQuestion({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId!),
-        path: pathname,
-      });
+      // if Edit Question, make a call edit action
+      if (type === "edit") {
+        await editQuestion({
+          questionId: parsedQuestionDetails._id,
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+        });
 
-      // navigate to home page
-      router.push("/");
+        // navigate to question detail page
+        router.push(`/question/${parsedQuestionDetails._id}`);
+      } else {
+        // make an async call to your API -> create a question
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId!),
+          path: pathname,
+        });
+
+        // navigate to home page
+        router.push("/");
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -158,7 +176,7 @@ const QuestionForm = ({
                   }}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
-                  initialValue=""
+                  initialValue={parsedQuestionDetails?.content || ""}
                   init={{
                     height: 350,
                     menubar: false,

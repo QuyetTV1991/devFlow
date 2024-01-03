@@ -19,11 +19,11 @@ const EditDeleteAction = ({ _id, type }: EditDeleteActionProps) => {
     router.push(`/question/edit/${_id}`);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (type === "Answer") {
-      deleteAnswer({ answerId: _id, path: pathname });
+      await deleteAnswer({ answerId: _id, path: pathname });
     } else {
-      deleteQuestion({ questionId: _id, path: pathname });
+      await deleteQuestion({ questionId: _id, path: pathname });
     }
   };
   return (
