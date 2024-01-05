@@ -74,19 +74,20 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex w-full flex-col gap-10"
+        className="mt-9 flex w-full flex-col gap-10"
       >
         <FormField
           control={form.control}
           name="fullname"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
+            <FormItem className="space-y-3.5">
               <FormLabel className="paragraph-semibold text-dark400_light800">
                 Full name <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Input
-                  className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Your Full Name"
+                  className="no-focus paragraph-regular background-light800_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
               </FormControl>
@@ -99,13 +100,14 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
+            <FormItem className="space-y-3.5">
               <FormLabel className="paragraph-semibold text-dark400_light800">
                 Username <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Input
-                  className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Your username"
+                  className="no-focus paragraph-regular background-light800_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
               </FormControl>
@@ -118,13 +120,14 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
           control={form.control}
           name="porfolio"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
+            <FormItem className="space-y-3.5">
               <FormLabel className="paragraph-semibold text-dark400_light800">
                 Portfolio Link
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Input
-                  className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Your portfolio URL"
+                  className="no-focus paragraph-regular background-light800_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
               </FormControl>
@@ -137,13 +140,14 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
           control={form.control}
           name="location"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
+            <FormItem className="space-y-3.5">
               <FormLabel className="paragraph-semibold text-dark400_light800">
                 Location <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Input
-                  className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Where are you from?"
+                  className="no-focus paragraph-regular background-light800_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
               </FormControl>
@@ -156,13 +160,14 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
           control={form.control}
           name="bio"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
+            <FormItem className="space-y-3.5">
               <FormLabel className="paragraph-semibold text-dark400_light800">
                 Bio <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Textarea
-                  className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Say something about you"
+                  className="no-focus paragraph-regular background-light800_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
               </FormControl>
@@ -171,13 +176,13 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
           )}
         />
 
-        <div className="flex justify-end">
+        <div className="mt-7 flex justify-end">
           <Button
             type="submit"
             className="primary-gradient w-fit text-white"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Submit"}
+            {isSubmitting ? "Saving..." : "Save"}
           </Button>
         </div>
       </form>
