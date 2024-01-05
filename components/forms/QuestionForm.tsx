@@ -232,6 +232,7 @@ const QuestionForm = ({
                     className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     placeholder="Add tags..."
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
+                    disabled={type === "Edit"}
                   />
                   {field.value.length > 0 && (
                     <div className="flex-start mt-2.5 gap-2.5">
@@ -239,16 +240,22 @@ const QuestionForm = ({
                         <Badge
                           key={index}
                           className="subtle-medium background-light800_dark300 text-light400_light500 flex-center gap-2 rounded-md border-none px-4 py-2 uppercase"
-                          onClick={() => handleTagRemove(tag, field)}
+                          onClick={() =>
+                            type === "ask-question"
+                              ? handleTagRemove(tag, field)
+                              : () => {}
+                          }
                         >
                           {tag}
-                          <Image
-                            src="/assets/icons/close.svg"
-                            alt="close tag"
-                            width={12}
-                            height={12}
-                            className="cursor-pointer object-contain invert-0 dark:invert"
-                          />
+                          {type === "ask-question" && (
+                            <Image
+                              src="/assets/icons/close.svg"
+                              alt="close tag"
+                              width={12}
+                              height={12}
+                              className="cursor-pointer object-contain invert-0 dark:invert"
+                            />
+                          )}
                         </Badge>
                       ))}
                     </div>
