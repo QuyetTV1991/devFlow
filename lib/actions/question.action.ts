@@ -221,21 +221,17 @@ export async function editQuestion(params: EditQuestionParams) {
     // Destructure the params ? why don't update tags >> because it's complicated to handle tag
     const { questionId, title, content, path } = params;
 
-    // UpdateQuestion
-    const updateQuestion = {
-      title,
-      content,
-    };
-
     // Find the question based on questionId
-    const question = await Question.findByIdAndUpdate(
-      questionId,
-      updateQuestion,
-      { new: true }
-    );
+    const question = await Question.findById(questionId).populate("tags");
 
     // If failed
     if (!question) throw new Error("Somethings went wrong when edit question");
+
+    // Update Question
+    question.title = title;
+    question.content = content;
+
+    await question.save();
 
     // Revalidate path
     revalidatePath(path);
