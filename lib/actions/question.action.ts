@@ -218,7 +218,7 @@ export async function editQuestion(params: EditQuestionParams) {
   try {
     connectToDataBase();
 
-    // Destructure the params ? why don't update tags
+    // Destructure the params ? why don't update tags >> because it's complicated to handle tag
     const { questionId, title, content, path } = params;
 
     // UpdateQuestion
