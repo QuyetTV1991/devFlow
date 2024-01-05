@@ -1,16 +1,15 @@
 import UserForm from "@/components/forms/UserForm";
 import { getUserInfo } from "@/lib/actions/user.action";
-import { ParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const Page = async ({ params }: ParamsProps) => {
+const Page = async () => {
   const { userId } = auth();
 
   if (!userId) redirect("/login");
 
-  const userProfile = await getUserInfo({ userId: params.id });
+  const userProfile = await getUserInfo({ userId });
 
   return (
     <div>
