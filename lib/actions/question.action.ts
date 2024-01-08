@@ -241,6 +241,20 @@ export async function editQuestion(params: EditQuestionParams) {
   }
 }
 
+export async function getTopQuestions() {
+  try {
+    connectToDataBase();
+
+    // Get all question and sort by descending views and get 5 questions
+    const questions = await Question.find({}).sort({ views: -1, upvotes: -1 }).limit(5);
+
+    return { questions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 // This function need to be test
 // export async function VoteQuestion(params: QuestionVoteParams) {
 //   try {
