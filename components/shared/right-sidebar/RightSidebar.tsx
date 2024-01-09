@@ -3,39 +3,11 @@ import Link from "next/link";
 import React from "react";
 import RenderTag from "../RenderTag";
 import { getTopQuestions } from "@/lib/actions/question.action";
-
-type Tag = {
-  _id: number;
-  tag: string;
-  amount: number;
-};
-
-const tags: Tag[] = [
-  {
-    _id: 1,
-    tag: "nextjs",
-    amount: 23,
-  },
-  {
-    _id: 2,
-    tag: "test",
-    amount: 18,
-  },
-  {
-    _id: 3,
-    tag: "react",
-    amount: 17,
-  },
-  {
-    _id: 4,
-    tag: "css",
-    amount: 12,
-  },
-  { _id: 5, tag: "next js", amount: 9 },
-];
+import { getPopularTags } from "@/lib/actions/tag.action";
 
 const RightSidebar = async () => {
   const results = await getTopQuestions();
+  const popularTags = await getPopularTags();
 
   return (
     <section className="custom-scrollbar background-light900_dark300 light-border sticky right-0 top-0 flex h-screen w-[350px] flex-col gap-6 overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden">
@@ -66,12 +38,12 @@ const RightSidebar = async () => {
       <div className="mt-16">
         <h3 className="h3-bold text-dark200_light900">Popular Tags</h3>
         <div className="mt-7 flex flex-col gap-4">
-          {tags.map((tag, index) => (
+          {popularTags.map((tag, index) => (
             <RenderTag
               key={index}
-              tag={tag.tag}
+              tag={tag.name}
               _id={tag._id}
-              amount={tag.amount}
+              amount={tag.numberOfQuestions}
               showAmount
             />
           ))}
