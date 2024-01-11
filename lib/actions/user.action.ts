@@ -198,14 +198,14 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
     connectToDataBase();
 
     // Destructure params
-    const { clerkId, page = 1, pageSize = 10, filter, searchQuery } = params;
+    const { clerkId, searchQuery } = params;
 
     // Define Query
     const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
 
-    // Find user by ClerkId
+    // Find user by ClerkId and match with Search
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
       match: query,
