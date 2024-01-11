@@ -114,12 +114,21 @@ export async function getAllUsers(params: GetAllUsersParams) {
     connectToDataBase();
 
     // Detructs the params
-    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+    const { searchQuery } = params;
 
-    // Find all users
-    const users = await User.find({}).sort({ createdAt: -1 });
+    // Create Query
+    const query: FilterQuery<typeof User> = {};
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
 
-    if (!users) console.log("somethings went wrong");
+    // Find users based on query, if no search, return all users
+    const users = await User.find(query).sort({ createdAt: -1 });
+
+    if (!users) console.log("somethings went wrong when fetch users");
 
     return { users };
   } catch (error) {
