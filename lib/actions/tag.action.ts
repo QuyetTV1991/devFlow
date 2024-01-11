@@ -44,12 +44,21 @@ export async function getAllTags(params: GetAllTagsParams) {
     connectToDataBase();
 
     // Detructs the params
-    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+    const { searchQuery } = params;
 
-    // Find all users
-    const tags = await Tag.find({}).sort({ createdOn: -1 });
+    // Create query
+    const query: FilterQuery<typeof Tag> = {};
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { description: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
 
-    if (!tags) console.log("somethings went wrong");
+    // Find all tags
+    const tags = await Tag.find(query).sort({ createdOn: -1 });
+
+    if (!tags) console.log("somethings went wrong when fetch Tag");
 
     return { tags };
   } catch (error) {
@@ -63,16 +72,25 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     await connectToDataBase();
 
     // Detructure params
-    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const { tagId, searchQuery } = params;
 
+    // Create query for filter TagId
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
+    // Create query for filter search - search questions in tag
+    const query: FilterQuery<typeof Question> = {};
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: searchQuery, $options: "i" } },
+        { content: { $regex: searchQuery, $options: "i" } },
+      ];
+    }
+
+    // find the tag based on TagId and search if exist
     const tag = await Tag.findById(tagFilter).populate({
       path: "questions",
       model: Question,
-      match: searchQuery
-        ? { title: { $regex: searchQuery, $options: "i" } }
-        : {},
+      match: query,
       options: {
         sort: { createdAt: -1 },
       },
@@ -84,6 +102,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
     if (!tag) throw new Error("No Tag Found");
 
+    // Return questions to display
     const questions = tag.questions;
 
     return { tagTitle: tag.name, questions };
