@@ -8,9 +8,14 @@ import { HomePageFilters } from "@/contants/filters";
 
 import React from "react";
 import { getQuestions } from "@/lib/actions/question.action";
+import { SearchParamsProps } from "@/types";
 
-const Home = async () => {
-  const result = await getQuestions({});
+const Home = async ({ searchParams }: SearchParamsProps) => {
+  const search = searchParams.q;
+
+  const result = await getQuestions({
+    searchQuery: search,
+  });
   const allQuestions = result.questions;
 
   return (

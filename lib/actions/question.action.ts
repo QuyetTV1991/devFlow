@@ -15,6 +15,7 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
+import { FilterQuery } from "mongoose";
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
@@ -68,7 +69,21 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     connectToDataBase();
 
-    const questions = await Question.find({})
+    // Destructure params
+    const { searchQuery } = params;
+
+    // Setup Query
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    // Find all questions based on query, if query null, return all questions
+    const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
       .sort({ createdAt: -1 });
@@ -246,7 +261,9 @@ export async function getTopQuestions() {
     connectToDataBase();
 
     // Get all question and sort by descending views and get 5 questions
-    const questions = await Question.find({}).sort({ views: -1, upvotes: -1 }).limit(5);
+    const questions = await Question.find({})
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5);
 
     return { questions };
   } catch (error) {
