@@ -10,6 +10,7 @@ import {
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
+  RecommendedParams,
 } from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -70,7 +71,7 @@ export async function getQuestions(params: GetQuestionsParams) {
     connectToDataBase();
 
     // Destructure params
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
     // Setup Query
     const query: FilterQuery<typeof Question> = {};
@@ -82,11 +83,26 @@ export async function getQuestions(params: GetQuestionsParams) {
       ];
     }
 
+    let sortOption = {};
+    switch (filter) {
+      case "newest":
+        sortOption = { createdAt: -1 };
+        break;
+      case "frequent":
+        sortOption = { views: -1 };
+        break;
+      case "unanswered":
+        query.answers = { $size: 0 };
+        break;
+      default:
+        break;
+    }
+
     // Find all questions based on query, if query null, return all questions
     const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
-      .sort({ createdAt: -1 });
+      .sort(sortOption);
 
     return { questions };
   } catch (error) {
@@ -268,6 +284,70 @@ export async function getTopQuestions() {
     return { questions };
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+export async function getRecommendedQuestions(params: RecommendedParams) {
+  try {
+    connectToDataBase();
+
+    // Destructure Params
+    const { userId, searchQuery } = params;
+
+    // Find the user based userId <clerkId>
+    const user = await User.findOne({ clerkId: userId });
+
+    // If failed
+    if (!user) throw new Error("cannot find the user for Recommend");
+
+    // Find the user Interaction
+    const userInteractions = await Interaction.find({ user: user._id })
+      .populate("tags")
+      .exec();
+
+    // Extract tags from user's interactions
+    const userTags = userInteractions.reduce((tags, interaction) => {
+      if (interaction.tags) {
+        tags = tags.concat(interaction.tags);
+      }
+      return tags;
+    }, []);
+
+    // Get distinct tag IDs from user's interactions
+    const distinctUserTagIds = [
+      // @ts-ignore
+      ...new Set(userTags.map((tag: any) => tag._id)),
+    ];
+
+    // Create Query
+    const query: FilterQuery<typeof Question> = {
+      $and: [
+        { tags: { $in: distinctUserTagIds } }, // Questions with user's tags
+        { author: { $ne: user._id } }, // Exclude user's own questions
+      ],
+    };
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const recommendedQuestions = await Question.find(query)
+      .populate({
+        path: "tags",
+        model: Tag,
+      })
+      .populate({
+        path: "author",
+        model: User,
+      });
+
+    return { questions: recommendedQuestions };
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }

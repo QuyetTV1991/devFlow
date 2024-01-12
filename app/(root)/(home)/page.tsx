@@ -7,16 +7,39 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { HomePageFilters } from "@/contants/filters";
 
 import React from "react";
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
+  const { userId } = auth();
   const search = searchParams.q;
+  const filter = searchParams.filter;
 
-  const result = await getQuestions({
-    searchQuery: search,
-  });
-  const allQuestions = result.questions;
+  let result;
+
+  if (filter === "recommended") {
+    if (userId) {
+      result = await getRecommendedQuestions({
+        userId,
+        searchQuery: search,
+      });
+    } else {
+      result = {
+        questions: [],
+      };
+    }
+  } else {
+    result = await getQuestions({
+      searchQuery: search,
+      filter,
+    });
+  }
+
+  const allQuestions = result?.questions;
 
   return (
     <>
@@ -48,8 +71,8 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {allQuestions.length > 0 ? (
-          allQuestions.map((question, index) => (
+        {allQuestions && allQuestions.length > 0 ? (
+          allQuestions?.map((question, index) => (
             <QuestionCard
               key={index}
               _id={question._id}
