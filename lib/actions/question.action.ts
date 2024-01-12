@@ -296,13 +296,13 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
     const { userId, searchQuery } = params;
 
     // Find the user based userId <clerkId>
-    const user = await User.find({ clerkId: userId });
+    const user = await User.findOne({ clerkId: userId });
 
     // If failed
     if (!user) throw new Error("cannot find the user for Recommend");
 
     // Find the user Interaction
-    const userInteractions = await Interaction.find({ user })
+    const userInteractions = await Interaction.find({ user: user._id })
       .populate("tags")
       .exec();
 
@@ -324,7 +324,7 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
     const query: FilterQuery<typeof Question> = {
       $and: [
         { tags: { $in: distinctUserTagIds } }, // Questions with user's tags
-        { author: { $ne: user } }, // Exclude user's own questions
+        { author: { $ne: user._id } }, // Exclude user's own questions
       ],
     };
 
