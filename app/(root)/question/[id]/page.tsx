@@ -11,14 +11,15 @@ import Votes from "@/components/shared/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { getTimeStamp } from "@/lib/utils";
+import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const QuestionDetail = async ({ params }: any) => {
-  const { questionId } = params;
-  const question = await getQuestionById({ questionId });
+const QuestionDetail = async ({ params, searchParams }: URLProps) => {
+  const { id } = params;
+  const question = await getQuestionById({ questionId: id });
   const { userId: clerkId } = auth();
 
   let mongoesUer;
@@ -49,13 +50,13 @@ const QuestionDetail = async ({ params }: any) => {
           <div className="flex justify-end">
             <Votes
               type="Question"
-              itemId={questionId}
+              itemId={JSON.stringify(question._id)}
               userId={JSON.stringify(mongoesUer?._id)}
               upvotes={question.upvotes.length}
               hasupVoted={question.upvotes.includes(mongoesUer?._id)}
               downvotes={question.downvotes.length}
               hasdownVoted={question.downvotes.includes(mongoesUer?._id)}
-              hasSaved={(mongoesUer?.saved ?? []).includes(questionId)}
+              hasSaved={(mongoesUer?.saved ?? []).includes(question._id)}
             />
           </div>
         </div>
@@ -94,6 +95,7 @@ const QuestionDetail = async ({ params }: any) => {
         questionId={question._id}
         userId={`${mongoesUer?._id}`}
         totalAnswers={question.answers.length}
+        filter={searchParams?.filter}
       />
       {/* <div className="mt-11">
         <div className="flex items-center justify-between">
@@ -116,7 +118,7 @@ const QuestionDetail = async ({ params }: any) => {
       <Answer
         // authorId is author of who answered, not author of who asked
         authorId={`${mongoesUer?._id}`}
-        questionId={questionId}
+        questionId={id}
       />
     </>
   );

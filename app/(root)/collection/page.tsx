@@ -14,9 +14,11 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
   if (!userId) redirect("/sign-in");
 
   const search = searchParams.q;
+  const filter = searchParams.filter;
   const result = await getSavedQuestion({
     clerkId: userId,
     searchQuery: search,
+    filter,
   });
   const questions = result?.questions;
 
@@ -39,7 +41,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       </div>
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
+        {questions && questions.length > 0 ? (
           questions.map((question: any, index: number) => (
             <QuestionCard
               key={index}

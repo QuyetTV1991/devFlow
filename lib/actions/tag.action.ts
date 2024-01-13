@@ -44,7 +44,7 @@ export async function getAllTags(params: GetAllTagsParams) {
     connectToDataBase();
 
     // Detructs the params
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
     // Create query
     const query: FilterQuery<typeof Tag> = {};
@@ -55,8 +55,27 @@ export async function getAllTags(params: GetAllTagsParams) {
       ];
     }
 
+    let sortOption = {}
+    switch (filter) {
+      case 'popular':
+        sortOption = { questions: -1 };
+        break;
+      case 'recent':
+        sortOption = { createdOn: -1 };
+        break;
+      case 'name':
+        sortOption = { name: 1 };
+        break;
+      case 'old':
+        sortOption = { createdOn: 1 };
+        break;
+
+      default:
+        break;
+    }
+
     // Find all tags
-    const tags = await Tag.find(query).sort({ createdOn: -1 });
+    const tags = await Tag.find(query).sort(sortOption);
 
     if (!tags) console.log("somethings went wrong when fetch Tag");
 

@@ -10,8 +10,10 @@ import React from "react";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const search = searchParams.q;
+  const filter = searchParams.filter;
   const results = await getAllTags({
     searchQuery: search,
+    filter,
   });
   return (
     <>
@@ -32,7 +34,14 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 
       <section className="mt-12 flex flex-wrap gap-4">
         {results.tags.length > 0 ? (
-          results.tags.map((tag, index) => <TagCard key={index} tag={tag} />)
+          results.tags.map((tag, index) => (
+            <TagCard
+              key={index}
+              name={tag.name}
+              questions={tag.questions.length}
+              id={tag._id}
+            />
+          ))
         ) : (
           <NoResult
             title={"No Tags Found"}

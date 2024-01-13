@@ -100,7 +100,7 @@ const Votes = ({
   useEffect(() => {
     try {
       viewQuestion({
-        questionId: itemId,
+        questionId: JSON.parse(itemId),
         userId: userId ? JSON.parse(userId) : undefined,
       });
     } catch (error) {

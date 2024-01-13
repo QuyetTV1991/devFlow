@@ -13,7 +13,7 @@ interface AllAnswersProps {
   userId: string;
   totalAnswers: number;
   page?: number;
-  filter?: number;
+  filter?: string;
 }
 
 const AllAnswers = async ({
@@ -23,7 +23,7 @@ const AllAnswers = async ({
   page,
   filter,
 }: AllAnswersProps) => {
-  const result = await GetAllAnswer({ questionId });
+  const result = await GetAllAnswer({ questionId, sortBy: filter });
 
   return (
     <div className="mt-11">
