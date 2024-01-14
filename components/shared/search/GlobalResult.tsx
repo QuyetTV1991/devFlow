@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GlobalFilter from "./GlobalFilter";
 import { useSearchParams } from "next/navigation";
-import { string } from "zod";
+import { globalSearch } from "@/lib/actions/general.action";
 
 interface ResultProps {
   href: string;
@@ -43,32 +43,48 @@ const Result = ({ href, title, type }: ResultProps) => {
 const GlobalResult = () => {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState("initial");
-  const [result, setResult] = useState([
-    { type: "question", id: 1, title: "Nextjs 14" },
-    { type: "tag", id: 2, title: "Nextjs" },
-    { type: "user", id: 3, title: "quinlan" },
-  ]);
+  const [result, setResult] = useState([]);
 
   const global = searchParams.get("global");
   const type = searchParams.get("type");
 
   useEffect(() => {
     const fetchResult = async () => {
-      setResult([]);
-      setStatus("loading");
-
       try {
+        setResult([]);
+        setStatus("loading");
         // fetching everything at everywhere
+        const res = await globalSearch({
+          query: global,
+          type,
+        });
+
+        setResult(JSON.parse(res));
+        setStatus("success");
       } catch (error) {
         setStatus("error");
         console.error(error);
         throw error;
       }
     };
+    if (global) {
+      fetchResult();
+    }
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
-    return "/";
+    switch (type) {
+      case "question":
+        return `/question/${id}`;
+      case "answer":
+        return `/question/${id}`;
+      case "user":
+        return `/profile/${id}`;
+      case "tag":
+        return `/tags/${id}`;
+      default:
+        return "/";
+    }
   };
 
   const isLoading = status === "loading";
@@ -96,7 +112,7 @@ const GlobalResult = () => {
               result.map((item: any, index: number) => (
                 <Result
                   key={index}
-                  href={renderLink("type", "id")}
+                  href={renderLink(item.type, item.id)}
                   title={item.title}
                   type={item.type}
                 />
