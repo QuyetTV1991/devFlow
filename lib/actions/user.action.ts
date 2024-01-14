@@ -332,11 +332,16 @@ export async function getQuestionsByUserId(params: GetUserStatsParams) {
     // Destructure params
     const { userId, page = 1, pageSize = 10 } = params;
 
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize
+
     // Count total Question
     const totalQuestions = await Question.countDocuments({ author: userId });
 
     // Find question base UserId (MongoDb _id)
     const questions = await Question.find({ author: userId })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort({ views: -1, upvotes: -1 })
       .populate({
         path: "tags",
@@ -355,7 +360,10 @@ export async function getQuestionsByUserId(params: GetUserStatsParams) {
         "Something went wrong while fetching question from userID"
       );
 
-    return { questions, totalQuestions };
+    // Calculate isNext
+    const isNext = totalQuestions > questions.length + skipAmount
+
+    return { questions, totalQuestions, isNext };
   } catch (error) {
     console.error(error);
     throw error;
@@ -369,11 +377,16 @@ export async function getAnswersByUserId(params: GetUserStatsParams) {
     // Destructure params
     const { userId, page = 1, pageSize = 10 } = params;
 
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize
+
     // Count total Answer
     const totalAnswers = await Answer.countDocuments({ author: userId });
 
     // Find question base UserId (MongoDb _id)
     const answers = await Answer.find({ author: userId })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort({ upvotes: -1 })
       .populate({
         path: "question",
@@ -392,7 +405,10 @@ export async function getAnswersByUserId(params: GetUserStatsParams) {
         "Something went wrong while fetching answers from userID"
       );
 
-    return { answers, totalAnswers };
+    // Calculate isNext
+    const isNext = totalAnswers > answers.length + skipAmount
+
+    return { answers, totalAnswers, isNext };
   } catch (error) {
     console.error(error);
     throw error;

@@ -14,12 +14,18 @@ const QuestionTab = async ({
   searchParams,
   clerkId,
 }: QuestionTabProps) => {
-  const result = await getQuestionsByUserId({ userId });
-  const allQuestions = result.questions;
+  const page = searchParams.page;
+
+  const result = await getQuestionsByUserId({
+    userId,
+    page: page ? +page : 1,
+    pageSize: 2,
+  });
+
   return (
     <>
-      {allQuestions.length > 0 &&
-        allQuestions.map((question, index) => (
+      {result.questions.length > 0 &&
+        result.questions.map((question, index) => (
           <QuestionCard
             key={index}
             _id={question._id}
@@ -33,10 +39,9 @@ const QuestionTab = async ({
             createdAt={question.createdAt}
           />
         ))}
+
       <div className="mt-10">
-        {allQuestions.length > 10 && (
-          <Pagination pageNumber={1} isNext={true} />
-        )}
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </>
   );

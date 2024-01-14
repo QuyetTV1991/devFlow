@@ -10,7 +10,7 @@ import {
 } from "./shared.types";
 import Tag, { ITag } from "@/database/tag.model";
 import Question from "@/database/question.model";
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
@@ -86,8 +86,8 @@ export async function getAllTags(params: GetAllTagsParams) {
     if (!tags) console.log("somethings went wrong when fetch Tag");
 
     // Calculate isNext
-    const totalTags = await Tag.countDocuments(query)
-    const isNext = totalTags > tags.length + skipAmount
+    const totalTags = await Tag.countDocuments(query);
+    const isNext = totalTags > tags.length + skipAmount;
 
     return { tags, isNext };
   } catch (error) {
@@ -101,7 +101,10 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     await connectToDataBase();
 
     // Detructure params
-    const { tagId, searchQuery } = params;
+    const { tagId, searchQuery, page = 1, pageSize = 5 } = params;
+
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize;
 
     // Create query for filter TagId
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
@@ -121,6 +124,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
       model: Question,
       match: query,
       options: {
+        skip: skipAmount,
+        limit: pageSize,
         sort: { createdAt: -1 },
       },
       populate: [
@@ -134,7 +139,26 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     // Return questions to display
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+    // Calculate isNext
+    const totalQuestionsByTag = await Tag.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(tagId),
+          // $expr: {
+          //   $eq: ['$_id', { $toObjectId: tagId }]
+          // }
+        },
+      },
+      {
+        $project: {
+          count: { $size: "$questions" },
+        },
+      },
+    ]);
+
+    const isNext = totalQuestionsByTag[0].count > questions.length + skipAmount;
+
+    return { tagTitle: tag.name, questions, isNext };
   } catch (error) {
     console.error(error);
     throw error;

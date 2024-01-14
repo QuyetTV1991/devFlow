@@ -10,12 +10,18 @@ interface AnswerTabProps extends SearchParamsProps {
 }
 
 const AnswerTab = async ({ userId, searchParams, clerkId }: AnswerTabProps) => {
-  const result = await getAnswersByUserId({ userId });
-  const allAnswers = result.answers;
+  const page = searchParams.page;
+
+  const result = await getAnswersByUserId({
+    userId,
+    page: page ? +page : 1,
+    pageSize: 2,
+  });
+
   return (
     <>
-      {allAnswers.length > 0 &&
-        allAnswers.map((answer: any, index: number) => (
+      {result.answers.length > 0 &&
+        result.answers.map((answer: any, index: number) => (
           <AnswerCard
             key={index}
             _id={answer._id}
@@ -27,7 +33,7 @@ const AnswerTab = async ({ userId, searchParams, clerkId }: AnswerTabProps) => {
           />
         ))}
       <div className="mt-10">
-        {allAnswers.length > 10 && <Pagination pageNumber={1} isNext={true} />}
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </>
   );
