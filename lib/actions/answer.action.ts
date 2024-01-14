@@ -46,7 +46,10 @@ export async function GetAllAnswer(params: GetAnswersParams) {
     connectToDataBase();
 
     // Destructe params
-    const { questionId, sortBy } = params;
+    const { questionId, sortBy, page = 1, pageSize = 5 } = params;
+
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize;
 
     // Define Query || Sorting
     let sortOption = {};
@@ -71,9 +74,15 @@ export async function GetAllAnswer(params: GetAnswersParams) {
     // Get all answer by questionId
     const answers = await Answer.find({ question: questionId })
       .populate("author", "_id clerkId name picture")
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort(sortOption);
 
-    return { answers };
+    // Calculate isNext
+    const totalAnswers = await Answer.countDocuments({ question: questionId });
+    const isNext = totalAnswers > answers.length + skipAmount;
+
+    return { answers, isNext };
   } catch (error) {
     console.error(error);
     throw error;
@@ -108,7 +117,7 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
 
     if (!answer) throw new Error("Answer not found");
 
-    // Increment author's reputation
+    // TODO: Increment author's reputation
 
     revalidatePath(path);
   } catch (error) {

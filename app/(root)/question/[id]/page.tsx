@@ -4,10 +4,6 @@ import ParseHTML from "@/components/shared/ParseHTML";
 import RenderStat from "@/components/shared/RenderStat";
 import RenderTag from "@/components/shared/RenderTag";
 import Votes from "@/components/shared/Votes";
-// import AnswerCard from "@/components/shared/cards/AnswerCard";
-// import Filters from "@/components/shared/filters/Filters";
-// import { AnswerFilters } from "@/contants/filters";
-// import { GetAllAnswer } from "@/lib/actions/answer.action";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { getTimeStamp } from "@/lib/utils";
@@ -96,24 +92,9 @@ const QuestionDetail = async ({ params, searchParams }: URLProps) => {
         userId={`${mongoesUer?._id}`}
         totalAnswers={question.answers.length}
         filter={searchParams?.filter}
+        page={searchParams.page ? +searchParams.page : 1}
+        pageSize={2}
       />
-      {/* <div className="mt-11">
-        <div className="flex items-center justify-between">
-          <h3>55 Answers</h3>
-          <Filters filters={AnswerFilters} />
-        </div>
-        <div>
-          {allAnswers.answers.length > 0 &&
-            allAnswers.answers.map((answer, index) => (
-              <AnswerCard
-                key={index}
-                content={answer.content}
-                authorId={answer.author.toString()}
-                createdAt={answer.createdAt}
-              />
-            ))}
-        </div>
-      </div> */}
 
       <Answer
         // authorId is author of who answered, not author of who asked

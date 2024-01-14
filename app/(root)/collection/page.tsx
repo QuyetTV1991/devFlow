@@ -1,4 +1,5 @@
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import Filters from "@/components/shared/filters/Filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
@@ -15,12 +16,15 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 
   const search = searchParams.q;
   const filter = searchParams.filter;
+  const page = searchParams.page;
+
   const result = await getSavedQuestion({
     clerkId: userId,
-    searchQuery: search,
-    filter,
+    searchQuery: search ? search : "",
+    filter: filter ? filter : "",
+    page: page ? +page : 1,
+    pageSize: 2,
   });
-  const questions = result?.questions;
 
   return (
     <>
@@ -41,8 +45,8 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       </div>
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions && questions.length > 0 ? (
-          questions.map((question: any, index: number) => (
+        {result?.questions && result?.questions.length > 0 ? (
+          result.questions.map((question: any, index: number) => (
             <QuestionCard
               key={index}
               _id={question._id}
@@ -67,6 +71,10 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
             />
           </div>
         )}
+      </div>
+
+      <div className="mt-10">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </>
   );

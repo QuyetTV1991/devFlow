@@ -26,6 +26,7 @@ const Pagination = ({ pageNumber, isNext }: PaginationProps) => {
     router.push(newUrl);
   };
 
+  // If isNext = false and pageNumber = 1, don't show Nagination
   if (!isNext && pageNumber === 1) return null;
 
   return (

@@ -11,10 +11,15 @@ import React from "react";
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const search = searchParams.q;
   const filter = searchParams.filter;
+  const page = searchParams.page;
+
   const results = await getAllTags({
-    searchQuery: search,
-    filter,
+    searchQuery: search ? search : "",
+    filter: filter ? filter : "",
+    page: page ? +page : 1,
+    pageSize: 5,
   });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Tags</h1>
@@ -53,9 +58,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       </section>
 
       <div className="mt-10">
-        {results.tags.length > 10 && (
-          <Pagination pageNumber={1} isNext={true} />
-        )}
+        <Pagination pageNumber={page ? +page : 1} isNext={results.isNext} />
       </div>
     </>
   );

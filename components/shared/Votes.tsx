@@ -43,7 +43,7 @@ const Votes = ({
     if (action === "upvote") {
       if (type === "Question") {
         await upvoteQuestion({
-          questionId: itemId,
+          questionId: JSON.parse(itemId),
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
@@ -92,7 +92,7 @@ const Votes = ({
 
     await saveQuestion({
       userId: JSON.parse(userId),
-      questionId: itemId,
+      questionId: JSON.parse(itemId),
       path: pathname,
     });
   };

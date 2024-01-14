@@ -13,11 +13,13 @@ import {
 } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import Pagination from "@/components/shared/Pagination";
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
   const { userId } = auth();
   const search = searchParams.q;
   const filter = searchParams.filter;
+  const page = searchParams.page;
 
   let result;
 
@@ -25,21 +27,24 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
     if (userId) {
       result = await getRecommendedQuestions({
         userId,
-        searchQuery: search,
+        searchQuery: search ? search : "",
+        page: page ? +page : 1,
+        pageSize: 5,
       });
     } else {
       result = {
         questions: [],
+        isNext: false,
       };
     }
   } else {
     result = await getQuestions({
-      searchQuery: search,
-      filter,
+      searchQuery: search ? search : "",
+      filter: filter ? filter : "",
+      page: page ? +page : 1,
+      pageSize: 5,
     });
   }
-
-  const allQuestions = result?.questions;
 
   return (
     <>
@@ -71,8 +76,8 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {allQuestions && allQuestions.length > 0 ? (
-          allQuestions?.map((question, index) => (
+        {result?.questions.length > 0 ? (
+          result?.questions?.map((question, index) => (
             <QuestionCard
               key={index}
               _id={question._id}
@@ -97,6 +102,10 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
             />
           </div>
         )}
+      </div>
+
+      <div className="mt-10">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </>
   );

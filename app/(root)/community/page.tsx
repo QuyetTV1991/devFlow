@@ -11,9 +11,13 @@ import React from "react";
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const search = searchParams.q;
   const filter = searchParams.filter;
+  const page = searchParams.page;
+
   const results = await getAllUsers({
-    searchQuery: search,
-    filter,
+    searchQuery: search ? search : "",
+    filter: filter ? filter : "",
+    page: page ? +page : 1,
+    pageSize: 2,
   });
   return (
     <>
@@ -48,9 +52,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       </section>
 
       <div className="mt-10">
-        {results.users.length > 10 && (
-          <Pagination pageNumber={1} isNext={true} />
-        )}
+        <Pagination pageNumber={page ? +page : 1} isNext={results.isNext} />
       </div>
     </>
   );

@@ -71,7 +71,10 @@ export async function getQuestions(params: GetQuestionsParams) {
     connectToDataBase();
 
     // Destructure params
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+
+    // Calculate skip amount
+    const skipAmount = (page - 1) * pageSize;
 
     // Setup Query
     const query: FilterQuery<typeof Question> = {};
@@ -102,9 +105,16 @@ export async function getQuestions(params: GetQuestionsParams) {
     const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort(sortOption);
 
-    return { questions };
+    // Calculate isNext
+    const totalQuestions = await Question.countDocuments(query);
+
+    const isNext = totalQuestions > skipAmount + questions.length;
+
+    return { questions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -293,13 +303,16 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
     connectToDataBase();
 
     // Destructure Params
-    const { userId, searchQuery } = params;
+    const { userId, searchQuery, page = 1, pageSize = 10 } = params;
 
     // Find the user based userId <clerkId>
     const user = await User.findOne({ clerkId: userId });
 
     // If failed
     if (!user) throw new Error("cannot find the user for Recommend");
+
+    // Calculate skip amount
+    const skipAmount = (page - 1) * pageSize;
 
     // Find the user Interaction
     const userInteractions = await Interaction.find({ user: user._id })
@@ -345,7 +358,12 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
         model: User,
       });
 
-    return { questions: recommendedQuestions };
+    // Calculate isNext
+    const totalQuestions = await Question.countDocuments(query);
+
+    const isNext = totalQuestions > skipAmount + recommendedQuestions.length;
+
+    return { questions: recommendedQuestions, isNext };
   } catch (error) {
     console.error(error);
     throw error;

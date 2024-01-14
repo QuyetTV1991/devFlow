@@ -114,7 +114,10 @@ export async function getAllUsers(params: GetAllUsersParams) {
     connectToDataBase();
 
     // Detructs the params
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize;
 
     // Create Query
     const query: FilterQuery<typeof User> = {};
@@ -125,7 +128,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
       ];
     }
 
-    let sortOption = {}
+    let sortOption = {};
     switch (filter) {
       case "new_users":
         sortOption = { joinedAt: -1 };
@@ -141,11 +144,18 @@ export async function getAllUsers(params: GetAllUsersParams) {
     }
 
     // Find users based on query, if no search, return all users
-    const users = await User.find(query).sort(sortOption);
+    const users = await User.find(query)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .sort(sortOption);
 
     if (!users) console.log("somethings went wrong when fetch users");
 
-    return { users };
+    // Calculate isNext
+    const totalUsers = await User.countDocuments(query);
+    const isNext = totalUsers > skipAmount + users.length;
+
+    return { users, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -213,29 +223,32 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
     connectToDataBase();
 
     // Destructure params
-    const { clerkId, searchQuery, filter } = params;
+    const { clerkId, searchQuery, filter, page = 1, pageSize = 10 } = params;
+
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize;
 
     // Define Query
     const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
 
-    let sortOption = {}
+    let sortOption = {};
     switch (filter) {
-      case 'most_recent':
+      case "most_recent":
         sortOption = { createdAt: -1 };
         break;
-      case 'oldest':
+      case "oldest":
         sortOption = { createdAt: 1 };
         break;
-      case 'most_voted':
+      case "most_voted":
         sortOption = { upvotes: -1 };
         break;
-      case 'most_viewed':
+      case "most_viewed":
         sortOption = { views: -1 };
         break;
-      case 'most_answered':
-        sortOption = { 'answers.length': -1 };
+      case "most_answered":
+        sortOption = { "answers.length": -1 };
         break;
 
       default:
@@ -247,6 +260,8 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
       path: "saved",
       match: query,
       options: {
+        skip: skipAmount,
+        limit: pageSize,
         sort: sortOption,
       },
       populate: [
@@ -259,8 +274,28 @@ export async function getSavedQuestion(params: GetSavedQuestionsParams) {
     if (!user) throw new Error("User not found");
 
     const savedQuestions = user.saved;
-    return { questions: savedQuestions };
-  } catch (error) { }
+
+    // Calculate isNext
+    const totalSavedQuestions = await User.aggregate([
+      {
+        $match: {
+          clerkId,
+        },
+      },
+      {
+        $project: {
+          count: { $size: "$saved" },
+        },
+      },
+    ]);
+    const isNext =
+      totalSavedQuestions[0].count > skipAmount + savedQuestions.length;
+
+    return { questions: savedQuestions, isNext };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 export async function getUserInfo(params: GetUserByIdParams) {

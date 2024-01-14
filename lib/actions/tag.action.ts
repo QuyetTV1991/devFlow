@@ -44,7 +44,10 @@ export async function getAllTags(params: GetAllTagsParams) {
     connectToDataBase();
 
     // Detructs the params
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+
+    // Calculate skipAmount
+    const skipAmount = (page - 1) * pageSize;
 
     // Create query
     const query: FilterQuery<typeof Tag> = {};
@@ -55,18 +58,18 @@ export async function getAllTags(params: GetAllTagsParams) {
       ];
     }
 
-    let sortOption = {}
+    let sortOption = {};
     switch (filter) {
-      case 'popular':
+      case "popular":
         sortOption = { questions: -1 };
         break;
-      case 'recent':
+      case "recent":
         sortOption = { createdOn: -1 };
         break;
-      case 'name':
+      case "name":
         sortOption = { name: 1 };
         break;
-      case 'old':
+      case "old":
         sortOption = { createdOn: 1 };
         break;
 
@@ -75,11 +78,18 @@ export async function getAllTags(params: GetAllTagsParams) {
     }
 
     // Find all tags
-    const tags = await Tag.find(query).sort(sortOption);
+    const tags = await Tag.find(query)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .sort(sortOption);
 
     if (!tags) console.log("somethings went wrong when fetch Tag");
 
-    return { tags };
+    // Calculate isNext
+    const totalTags = await Tag.countDocuments(query)
+    const isNext = totalTags > tags.length + skipAmount
+
+    return { tags, isNext };
   } catch (error) {
     console.log(error);
     throw error;
