@@ -27,7 +27,7 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
     if (userId) {
       result = await getRecommendedQuestions({
         userId,
-        searchQuery: search ? search : "",
+        searchQuery: search,
         page: page ? +page : 1,
         pageSize: 5,
       });
@@ -39,8 +39,8 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
     }
   } else {
     result = await getQuestions({
-      searchQuery: search ? search : "",
-      filter: filter ? filter : "",
+      searchQuery: search,
+      filter,
       page: page ? +page : 1,
       pageSize: 5,
     });

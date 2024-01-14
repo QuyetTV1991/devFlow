@@ -20,8 +20,8 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 
   const result = await getSavedQuestion({
     clerkId: userId,
-    searchQuery: search ? search : "",
-    filter: filter ? filter : "",
+    searchQuery: search,
+    filter,
     page: page ? +page : 1,
     pageSize: 2,
   });

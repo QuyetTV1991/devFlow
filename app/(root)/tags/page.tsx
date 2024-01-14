@@ -14,8 +14,8 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
   const page = searchParams.page;
 
   const results = await getAllTags({
-    searchQuery: search ? search : "",
-    filter: filter ? filter : "",
+    searchQuery: search,
+    filter,
     page: page ? +page : 1,
     pageSize: 5,
   });
