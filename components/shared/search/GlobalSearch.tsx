@@ -13,7 +13,7 @@ const GlobalSearch = () => {
   const pathname = usePathname();
   const searchContainerRef = useRef(null);
 
-  const query = searchParams.get("q");
+  const query = searchParams.get("global");
 
   const [search, setSearch] = useState(query || "");
   const [debounced, setDebounced] = useState(search);
@@ -28,7 +28,7 @@ const GlobalSearch = () => {
         !searchContainerRef.current.contains(event.target)
       ) {
         setIsOpen(false);
-        setDebounced("");
+        setSearch("");
       }
     };
 
@@ -70,7 +70,10 @@ const GlobalSearch = () => {
   }, [search, pathname, router, searchParams, query]);
 
   return (
-    <div className="relative w-full max-w-[600px] max-lg:hidden">
+    <div
+      className="relative w-full max-w-[600px] max-lg:hidden"
+      ref={searchContainerRef}
+    >
       <div className="background-light800_darkgradient relative flex min-h-[56px] grow items-center gap-1 rounded-xl px-4">
         <Image
           src="/assets/icons/search.svg"
