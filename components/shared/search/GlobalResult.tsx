@@ -32,7 +32,7 @@ const Result = ({ href, title, type }: ResultProps) => {
         <p className="body-medium text-dark200_light800 line-clamp-1">
           {title}
         </p>
-        <p className="small-medium mt-1 font-bold capitalize text-light400_light500">
+        <p className="small-medium text-light400_light500 mt-1 font-bold capitalize">
           {type}
         </p>
       </div>
@@ -101,7 +101,7 @@ const GlobalResult = () => {
         </p>
         {isLoading ? (
           <div className="flex-center flex-col px-5">
-            <ReloadIcon className="my-2 h-10 w-10 text-primary-500 animate-spin" />
+            <ReloadIcon className="my-2 h-10 w-10 animate-spin text-primary-500" />
             <p className="text-dark200_light800 body-regular">
               Browsing the entire database
             </p>
