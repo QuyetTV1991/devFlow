@@ -13,10 +13,9 @@ const GlobalSearch = () => {
   const pathname = usePathname();
   const searchContainerRef = useRef(null);
 
-  const query = searchParams.get("global");
+  const query = searchParams.get("q");
 
   const [search, setSearch] = useState(query || "");
-  const [debounced, setDebounced] = useState(search);
   const [isOpen, setIsOpen] = useState(false);
 
   // Function handle click outside Global Search Component
@@ -41,33 +40,31 @@ const GlobalSearch = () => {
     };
   }, [pathname]);
 
-  // Debounced function, delay 500 ms
+  // Debounced function, delay 300 ms
   useEffect(() => {
-    const timer = setTimeout(() => setSearch(debounced), 500);
-    return () => clearTimeout(timer);
-  }, [debounced]);
-
-  // updated search term
-  useEffect(() => {
-    if (search !== "") {
-      const newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: "global",
-        value: search,
-      });
-
-      router.push(newUrl, { scroll: false });
-    } else {
-      if (query) {
-        const newUrl = removeKeysFromQuery({
+    const delayDebounceFn = setTimeout(() => {
+      if (search) {
+        const newUrl = formUrlQuery({
           params: searchParams.toString(),
-          keysToRemove: ["global", "type"],
+          key: "global",
+          value: search,
         });
 
         router.push(newUrl, { scroll: false });
+      } else {
+        if (query) {
+          const newUrl = removeKeysFromQuery({
+            params: searchParams.toString(),
+            keysToRemove: ["global", "type"],
+          });
+
+          router.push(newUrl, { scroll: false });
+        }
       }
-    }
-  }, [search, pathname, router, searchParams, query]);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search, router, pathname, searchParams, query]);
 
   return (
     <div
@@ -85,9 +82,9 @@ const GlobalSearch = () => {
         <Input
           type="text"
           placeholder="Search globally"
-          value={debounced}
+          value={search}
           onChange={(e) => {
-            setDebounced(e.target.value);
+            setSearch(e.target.value);
 
             if (!isOpen) {
               setIsOpen(true);
