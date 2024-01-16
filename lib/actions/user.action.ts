@@ -333,7 +333,7 @@ export async function getQuestionsByUserId(params: GetUserStatsParams) {
     const { userId, page = 1, pageSize = 10 } = params;
 
     // Calculate skipAmount
-    const skipAmount = (page - 1) * pageSize
+    const skipAmount = (page - 1) * pageSize;
 
     // Count total Question
     const totalQuestions = await Question.countDocuments({ author: userId });
@@ -342,7 +342,7 @@ export async function getQuestionsByUserId(params: GetUserStatsParams) {
     const questions = await Question.find({ author: userId })
       .skip(skipAmount)
       .limit(pageSize)
-      .sort({ views: -1, upvotes: -1 })
+      .sort({ createdAt: -1, views: -1, upvotes: -1 })
       .populate({
         path: "tags",
         model: Tag,
@@ -361,7 +361,7 @@ export async function getQuestionsByUserId(params: GetUserStatsParams) {
       );
 
     // Calculate isNext
-    const isNext = totalQuestions > questions.length + skipAmount
+    const isNext = totalQuestions > questions.length + skipAmount;
 
     return { questions, totalQuestions, isNext };
   } catch (error) {
@@ -378,7 +378,7 @@ export async function getAnswersByUserId(params: GetUserStatsParams) {
     const { userId, page = 1, pageSize = 10 } = params;
 
     // Calculate skipAmount
-    const skipAmount = (page - 1) * pageSize
+    const skipAmount = (page - 1) * pageSize;
 
     // Count total Answer
     const totalAnswers = await Answer.countDocuments({ author: userId });
@@ -406,7 +406,7 @@ export async function getAnswersByUserId(params: GetUserStatsParams) {
       );
 
     // Calculate isNext
-    const isNext = totalAnswers > answers.length + skipAmount
+    const isNext = totalAnswers > answers.length + skipAmount;
 
     return { answers, totalAnswers, isNext };
   } catch (error) {
