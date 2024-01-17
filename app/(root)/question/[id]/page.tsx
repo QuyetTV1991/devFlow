@@ -100,6 +100,7 @@ const QuestionDetail = async ({ params, searchParams }: URLProps) => {
         // authorId is author of who answered, not author of who asked
         authorId={`${mongoesUer?._id}`}
         questionId={id}
+        questionContent={question.content}
       />
     </>
   );
