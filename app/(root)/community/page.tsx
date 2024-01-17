@@ -19,6 +19,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
     page: page ? +page : 1,
     pageSize: 2,
   });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Users</h1>

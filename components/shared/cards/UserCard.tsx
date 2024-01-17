@@ -1,8 +1,5 @@
-// "use client";
-
 import Image from "next/image";
 import Link from "next/link";
-// import React, { useEffect, useState } from "react";
 import RenderTag from "../RenderTag";
 import { getTopInteractedTags } from "@/lib/actions/tag.action";
 import { Badge } from "@/components/ui/badge";
@@ -16,30 +13,10 @@ interface UserCardProps {
     username: string;
   };
 }
-// interface Tag {
-//   _id: string | number;
-//   name: string;
-//   // Other properties if applicable...
-// }
 
 const UserCard = async ({ user }: UserCardProps) => {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
-  // const [interactedTags, setInteractedTags] = useState<Tag[]>([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const tags = await getTopInteractedTags({
-  //         userId: user._id.toString(),
-  //       });
-  //       setInteractedTags(tags);
-  //     } catch (error) {
-  //       console.error("Error fetching tags:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [user._id]);
+ 
   return (
     <Link
       href={`/profile/${user.clerkId}`}
