@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { formatNumbers, formatType } from "@/lib/utils";
+import { BadgeCounts } from "@/types";
 
 interface MedalProps {
   medal: "Gold" | "Silver" | "Bronze";
@@ -29,14 +30,23 @@ const Medal = ({ iconUrl, medal, count }: MedalProps) => {
 };
 
 interface StatsProps {
+  reputation: number;
   totalAnswers: number;
   totalQuestions: number;
+  badges: BadgeCounts;
 }
 
-const Stats = ({ totalAnswers, totalQuestions }: StatsProps) => {
+const Stats = ({
+  reputation,
+  totalAnswers,
+  totalQuestions,
+  badges,
+}: StatsProps) => {
   return (
     <>
-      <h4 className="h3-semibold text-dark200_light900">Stats</h4>
+      <h4 className="h3-semibold text-dark200_light900">
+        Stats - {reputation}
+      </h4>
       <div className="mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4">
         <div className="light-border background-light900_dark300 flex flex-wrap items-center justify-evenly gap-4 rounded-md border p-6 shadow-light-300 dark:shadow-dark-200">
           <div>
@@ -56,15 +66,19 @@ const Stats = ({ totalAnswers, totalQuestions }: StatsProps) => {
             </p>
           </div>
         </div>
-        <Medal medal="Gold" count={0} iconUrl="/assets/icons/gold-medal.svg" />
+        <Medal
+          medal="Gold"
+          count={badges.GOLD}
+          iconUrl="/assets/icons/gold-medal.svg"
+        />
         <Medal
           medal="Silver"
-          count={0}
+          count={badges.SILVER}
           iconUrl="/assets/icons/silver-medal.svg"
         />
         <Medal
           medal="Bronze"
-          count={0}
+          count={badges.BRONZE}
           iconUrl="/assets/icons/bronze-medal.svg"
         />
       </div>
