@@ -19,7 +19,6 @@ const QuestionTab = async ({
   const result = await getQuestionsByUserId({
     userId,
     page: page ? +page : 1,
-    pageSize: 2,
   });
 
   return (

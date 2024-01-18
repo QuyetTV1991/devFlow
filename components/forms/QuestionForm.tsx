@@ -22,6 +22,7 @@ import Image from "next/image";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
+import { toast } from "../ui/use-toast";
 
 interface QuestionFormProps {
   type?: string;
@@ -71,6 +72,11 @@ const QuestionForm = ({
           path: pathname,
         });
 
+        // Show Toast
+        toast({
+          title: 'Updated Question'
+        })
+
         // navigate to question detail page
         router.push(`/question/${parsedQuestionDetails._id}`);
       } else {
@@ -81,6 +87,11 @@ const QuestionForm = ({
           tags: values.tags,
           author: JSON.parse(mongoUserId!),
           path: pathname,
+        });
+
+        // Show Toast
+        toast({
+          title: "Question Posted",
         });
 
         // navigate to home page

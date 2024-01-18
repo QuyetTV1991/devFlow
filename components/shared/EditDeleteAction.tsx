@@ -5,6 +5,7 @@ import { deleteQuestion } from "@/lib/actions/question.action";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "../ui/use-toast";
 
 interface EditDeleteActionProps {
   _id: string;
@@ -25,6 +26,10 @@ const EditDeleteAction = ({ _id, type }: EditDeleteActionProps) => {
     } else {
       await deleteQuestion({ questionId: _id, path: pathname });
     }
+
+    return toast({
+      title: `${type === "Answer" ? "Answer" : "Question"} deleted`,
+    });
   };
   return (
     <div className="flex items-center justify-end gap-5">
@@ -34,7 +39,7 @@ const EditDeleteAction = ({ _id, type }: EditDeleteActionProps) => {
           alt="Edit"
           width={14}
           height={14}
-          className="cursor-pointer object-contain"
+          className="min-w-[14px] cursor-pointer object-contain"
           onClick={handleEdit}
         />
       )}
@@ -44,7 +49,7 @@ const EditDeleteAction = ({ _id, type }: EditDeleteActionProps) => {
         alt="Delete"
         width={14}
         height={14}
-        className="cursor-pointer object-contain"
+        className="min-w-[14px] cursor-pointer object-contain"
         onClick={handleDelete}
       />
     </div>

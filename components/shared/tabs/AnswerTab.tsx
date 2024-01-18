@@ -15,7 +15,6 @@ const AnswerTab = async ({ userId, searchParams, clerkId }: AnswerTabProps) => {
   const result = await getAnswersByUserId({
     userId,
     page: page ? +page : 1,
-    pageSize: 2,
   });
 
   return (

@@ -15,7 +15,6 @@ const TagDetail = async ({ params, searchParams }: URLProps) => {
     tagId: id,
     searchQuery: search,
     page: page ? +page : 1,
-    pageSize: 2,
   });
 
   return (
