@@ -15,7 +15,6 @@ interface AllAnswersProps {
   totalAnswers: number;
   page?: number;
   filter?: string;
-  pageSize?: number;
 }
 
 const AllAnswers = async ({
@@ -23,14 +22,12 @@ const AllAnswers = async ({
   userId,
   totalAnswers,
   page,
-  pageSize,
   filter,
 }: AllAnswersProps) => {
   const result = await GetAllAnswer({
     questionId,
     sortBy: filter,
     page,
-    pageSize,
   });
 
   return (
