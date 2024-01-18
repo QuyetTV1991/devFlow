@@ -101,7 +101,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     await connectToDataBase();
 
     // Detructure params
-    const { tagId, searchQuery, page = 1, pageSize = 5 } = params;
+    const { tagId, searchQuery, page = 1, pageSize = 10 } = params;
 
     // Calculate skipAmount
     const skipAmount = (page - 1) * pageSize;

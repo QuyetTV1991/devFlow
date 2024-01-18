@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { CreateAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 interface AnswerProps {
   authorId: string;
@@ -67,7 +68,11 @@ const Answer = ({ authorId, questionId, questionContent }: AnswerProps) => {
   const isSubmitting = status === "submitting";
 
   const generateAiAnswer = async () => {
-    if (!authorId) return;
+    if (!authorId)
+      return toast({
+        title: "Please login",
+        description: "You must login to perform this action",
+      });
 
     setStatusAI("submmiting");
 
@@ -90,7 +95,11 @@ const Answer = ({ authorId, questionId, questionContent }: AnswerProps) => {
         editor.setContent(formattedAnswer);
       }
 
-      // Toast...
+      // Toast
+      toast({
+        title: "Generate AI Answer successful",
+        variant: "default",
+      });
 
       setStatusAI("sucess");
     } catch (error) {

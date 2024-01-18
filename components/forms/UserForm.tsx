@@ -18,6 +18,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateUser } from "@/lib/actions/user.action";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 interface UserFormProps {
   clerkId: string;
@@ -61,6 +62,12 @@ const UserForm = ({ clerkId, userProfile }: UserFormProps) => {
       });
 
       setStatus("success");
+
+      // Toast
+      toast({
+        title: "Updated Information",
+      });
+
       router.back();
     } catch (error) {
       console.log(error);

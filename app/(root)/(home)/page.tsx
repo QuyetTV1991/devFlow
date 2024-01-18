@@ -29,7 +29,6 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
         userId,
         searchQuery: search,
         page: page ? +page : 1,
-        pageSize: 5,
       });
     } else {
       result = {
@@ -42,7 +41,6 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
       searchQuery: search,
       filter,
       page: page ? +page : 1,
-      pageSize: 5,
     });
   }
 
