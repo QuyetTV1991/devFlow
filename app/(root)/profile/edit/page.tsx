@@ -3,6 +3,11 @@ import { getUserInfo } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit Profile",
+};
 
 const Page = async () => {
   const { userId } = auth();

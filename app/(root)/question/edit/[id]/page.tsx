@@ -5,6 +5,11 @@ import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit Question",
+};
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId } = auth();

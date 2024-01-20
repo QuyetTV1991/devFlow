@@ -11,6 +11,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import AnswerTab from "@/components/shared/tabs/AnswerTab";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+};
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();

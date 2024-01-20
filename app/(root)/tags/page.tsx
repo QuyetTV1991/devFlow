@@ -7,6 +7,11 @@ import { TagFilters } from "@/contants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
 import { SearchParamsProps } from "@/types";
 import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tags",
+};
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const search = searchParams.q;

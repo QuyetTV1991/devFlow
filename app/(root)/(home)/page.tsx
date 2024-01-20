@@ -14,6 +14,11 @@ import {
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import Pagination from "@/components/shared/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
   const { userId } = auth();
