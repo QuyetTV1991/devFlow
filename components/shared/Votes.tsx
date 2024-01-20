@@ -55,7 +55,7 @@ const Votes = ({
         });
       } else if (type === "Answer") {
         await upvoteAnswer({
-          answerId: itemId,
+          answerId: JSON.parse(itemId),
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
@@ -73,7 +73,7 @@ const Votes = ({
     if (action === "downvote") {
       if (type === "Question") {
         await downvoteQuestion({
-          questionId: itemId,
+          questionId: JSON.parse(itemId),
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
@@ -81,7 +81,7 @@ const Votes = ({
         });
       } else if (type === "Answer") {
         await downvoteAnswer({
-          answerId: itemId,
+          answerId: JSON.parse(itemId),
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
