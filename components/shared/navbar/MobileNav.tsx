@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-import { SignedOut } from "@clerk/nextjs";
+import { SignOutButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/contants";
 import { usePathname } from "next/navigation";
@@ -78,7 +78,7 @@ const MobileNav = () => {
             Dev <span className="text-primary-500">OverFlow</span>
           </p>
         </Link>
-        <div>
+        <div className="flex flex-col h-[95%] justify-between">
           <SheetClose asChild>
             <NavContent />
           </SheetClose>
@@ -101,6 +101,17 @@ const MobileNav = () => {
               </SheetClose>
             </div>
           </SignedOut>
+          <SignedIn>
+            <div>
+              <SheetClose asChild>
+                <SignOutButton>
+                  <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+                    <span className="primary-text-gradient">Log Out</span>
+                  </Button>
+                </SignOutButton>
+              </SheetClose>
+            </div>
+          </SignedIn>
         </div>
       </SheetContent>
     </Sheet>
