@@ -46,8 +46,8 @@ const Answer = ({ authorId, questionId, questionContent }: AnswerProps) => {
     try {
       await CreateAnswer({
         content: data.answer,
-        author: authorId,
-        question: questionId,
+        author: JSON.parse(authorId),
+        question: JSON.parse(questionId),
         path: pathname,
       });
 
