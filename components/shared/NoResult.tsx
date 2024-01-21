@@ -5,8 +5,8 @@ import CustomBtn from "./CustomBtn";
 interface NoResultProps {
   title: string;
   description: string;
-  link: string;
-  linkTitle: string;
+  link?: string | null;
+  linkTitle?: string | null;
 }
 
 const NoResult = ({ title, description, link, linkTitle }: NoResultProps) => {
@@ -32,13 +32,14 @@ const NoResult = ({ title, description, link, linkTitle }: NoResultProps) => {
       <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
         {description}
       </p>
-
-      <CustomBtn
-        route={link}
-        label={linkTitle}
-        linkClasses="justify-center"
-        btnClasses="paragraph-medium mt-5 rounded-lg bg-primary-500 hover:bg-slate-500 dark:bg-primary-500 dark:text-light-900"
-      />
+      {link && linkTitle && (
+        <CustomBtn
+          route={link}
+          label={linkTitle}
+          linkClasses="justify-center"
+          btnClasses="paragraph-medium mt-5 rounded-lg bg-primary-500 hover:bg-slate-500 dark:bg-primary-500 dark:text-light-900"
+        />
+      )}
     </div>
   );
 };
