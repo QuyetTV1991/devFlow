@@ -31,14 +31,14 @@ const SearchJob = () => {
           placeholder="Job Title, Company, or Keywords"
           value=""
           onChange={() => {}}
-          className="paragraph-regular no-focus placeholder text-dark400_light700 bg-transparent border-none shadow-none outline-none"
+          className="paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
         />
       </div>
 
-      <div className="relative flex justify-between items-center gap-6">
+      <div className="relative flex items-center justify-between gap-6">
         <Select defaultValue="" onValueChange={() => {}}>
-          <SelectTrigger className="min-h-[56px] sm:min-w-[170px] body-regular light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5">
-            <div className="flex gap-3 items-center line-clamp-1 flex-1 text-left text-dark400_light700 bg-transparent">
+          <SelectTrigger className="body-regular light-border background-light800_dark300 text-dark500_light700 min-h-[56px] border px-5 py-2.5 sm:min-w-[170px]">
+            <div className="text-dark400_light700 line-clamp-1 flex flex-1 items-center gap-3 bg-transparent text-left">
               <Image
                 src="assets/icons/location.svg"
                 alt="location"
