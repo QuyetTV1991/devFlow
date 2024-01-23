@@ -99,6 +99,7 @@ export async function fetchJobs(params: GetJobsParams) {
         "X-RapidAPI-Key": "07c4382e13msh4ac030eef026115p108557jsnfa843319b92c",
         "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
       },
+      caches: "force-cache",
     };
 
     const response = await fetch(url, options);
