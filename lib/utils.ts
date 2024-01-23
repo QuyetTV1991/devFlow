@@ -152,3 +152,23 @@ export const assignBadges = (params: BagdeParam) => {
 
   return badgeCounts;
 };
+
+export const getCountryLogoUrl = async (countryCode: string) => {
+  const baseUrl = "https://restcountries.com/v3.1/alpha/";
+
+  try {
+    const response = await fetch(`${baseUrl}${countryCode}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const countryData = await response.json();
+    const flagUrl = countryData[0].flags.svg;
+
+    return flagUrl;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

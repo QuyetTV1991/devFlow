@@ -36,7 +36,7 @@ const Filters = ({
   const handleChangeFilter = (value: string) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
-      key: "filter",
+      key: "location",
       value,
     });
     router.push(newUrl, { scroll: false });

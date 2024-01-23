@@ -1,58 +1,86 @@
 import NoResult from "@/components/shared/NoResult";
-import Pagination from "@/components/shared/Pagination";
-import QuestionCard from "@/components/shared/cards/QuestionCard";
+// import Pagination from "@/components/shared/Pagination";
 import { SearchParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 import React from "react";
 import { Metadata } from "next";
-import SearchJob from "@/components/jobs/SearchJob";
+import { JobLocationFilters } from "@/contants/filters";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
+import { Button } from "@/components/ui/button";
+import { fetchJobs } from "@/app/api/jobs/route";
+import JobCard from "@/components/shared/cards/JobCard";
+import JobFilters from "@/components/shared/filters/JobFilters";
 
 export const metadata: Metadata = {
   title: "Jobs",
 };
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const { userId } = auth();
-  if (!userId) redirect("/sign-in");
-
   const page = searchParams.page;
-  const result = {
-    questions: [],
-    isNext: false,
-  };
+  const search = searchParams.q;
+  const location = searchParams.location;
+  const locationCode = JobLocationFilters.find(
+    (item) => item.value === location
+  );
 
-  //   const search = searchParams.q;
-  //   const filter = searchParams.filter;
+  const { result } = await fetchJobs({
+    query: search,
+    location: locationCode?.code,
+    page: page ? +page : 1,
+  });
 
-  //   const result = await getSavedQuestion({
-  //     clerkId: userId,
-  //     searchQuery: search,
-  //     filter,
-  //     page: page ? +page : 1,
-  //   });
+  const allJobs = result.data;
 
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Jobs</h1>
 
-      <SearchJob />
+      <article className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+        <LocalSearchbar
+          route="/jobs"
+          iconPosition="left"
+          imgSrc="/assets/icons/search.svg"
+          placeholder="Job Title, Company, or Keywords"
+          otherClasses="flex-1"
+        />
+        <div className="flex items-center justify-between gap-6">
+          <JobFilters
+            filters={JobLocationFilters}
+            otherClasses="min-h-[56px] sm:min-w-[170px]"
+            containerClasses="w-full"
+            imgUrl="assets/icons/location.svg"
+          />
+          <Button className="primary-gradient px-4 py-3 !text-light-900">
+            Find Job
+          </Button>
+        </div>
+      </article>
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {result?.questions && result?.questions.length > 0 ? (
-          result.questions.map((question: any, index: number) => (
-            <QuestionCard
-              key={index}
-              _id={question._id}
-              title={question.title}
-              tags={question.tags}
-              author={question.author}
-              upvotes={question.upvotes}
-              views={question.views}
-              answers={question.answers}
-              createdAt={question.createdAt}
-            />
-          ))
+        {allJobs ? (
+          <section className="light-border mb-9 mt-11 flex flex-col gap-9 border-b pb-9">
+            {allJobs.map((job: any, index: number) => (
+              <JobCard
+                key={index}
+                employerLogo={job.employer_logo}
+                location={{
+                  country: job.job_country,
+                  state: job.job_state,
+                  city: job.job_city,
+                }}
+                employerWebsite={job.employer_website}
+                jobTitle={job.job_title}
+                jobDescriptions={job.job_description}
+                jobType={job.job_employment_type}
+                salary={{
+                  min: job.job_min_salary,
+                  max: job.job_max_salary,
+                  currency: job.job_salary_currency,
+                  period: job.job_salary_period,
+                }}
+                jobApplyLink={job.job_apply_link}
+              />
+            ))}
+          </section>
         ) : (
           <div className="flex-center text-dark400_light500 mt-10 w-full">
             <NoResult
@@ -64,7 +92,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       </div>
 
       <div className="mt-10">
-        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
+        {/* <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} /> */}
       </div>
     </>
   );
