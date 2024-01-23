@@ -6,9 +6,9 @@ import { Metadata } from "next";
 import { JobLocationFilters } from "@/contants/filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
-import { fetchJobs } from "@/app/api/jobs/route";
 import JobCard from "@/components/shared/cards/JobCard";
 import JobFilters from "@/components/shared/filters/JobFilters";
+import { fetchJobs } from "@/lib/actions/general.action";
 
 export const metadata: Metadata = {
   title: "Jobs",
