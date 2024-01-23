@@ -5,7 +5,6 @@ import React from "react";
 import { Metadata } from "next";
 import { JobLocationFilters } from "@/contants/filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-import { Button } from "@/components/ui/button";
 import JobCard from "@/components/shared/cards/JobCard";
 import JobFilters from "@/components/shared/filters/JobFilters";
 import { fetchJobs } from "@/lib/actions/general.action";
@@ -49,9 +48,6 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
             containerClasses="w-full"
             imgUrl="assets/icons/location.svg"
           />
-          <Button className="primary-gradient px-4 py-3 !text-light-900">
-            Find Job
-          </Button>
         </div>
       </article>
 
