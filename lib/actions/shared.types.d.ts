@@ -157,3 +157,9 @@ export interface GetUserStatsParams {
 export interface DeleteUserParams {
   clerkId: string;
 }
+
+export interface GetJobsParams {
+  query?: string | null;
+  location?: string | null;
+  page?: number;
+}
